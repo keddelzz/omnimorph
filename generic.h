@@ -21,7 +21,7 @@ typename Generic<T>::Repr to_repr(
 {
     using Type = typename Generic<T>::Type;
     using Repr = typename Generic<T>::Repr;
-    return generic.to.template operator()<Type, Repr>(value);
+    return generic.to.template operator()<Type, const Repr &>(value);
 }
 
 template<typename T>
@@ -38,7 +38,7 @@ typename Generic<T>::Type to_value(
 {
     using Repr = typename Generic<T>::Repr;
     using Type = typename Generic<T>::Type;
-    return generic.from.template operator()<Repr, Type>(repr);
+    return generic.from.template operator()<Repr, const Type &>(repr);
 }
 
 template<typename T>
