@@ -5,10 +5,13 @@ project(meta_test CXX C)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME}
-    main.cpp
     flatpointer.h
+    flatfunction.h
     hlist.h
-        generic.h show.h)
+    generic.h
+    show.h
+    main.cpp
+)
 
 target_compile_features(${PROJECT_NAME}
     PRIVATE cxx_constexpr
