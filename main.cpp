@@ -4,8 +4,9 @@
 #include "flatfunction.h"
 #include "hlist.h"
 #include "generic.h"
-#include "show.h"
+//#include "show.h"
 
+/*
 template<typename T>
 struct ShowG
 {
@@ -16,7 +17,7 @@ struct ShowG
         return r.show(repr);
     }
 };
-
+*/
 struct SimpleAddress
 {
 public:
@@ -101,7 +102,7 @@ int main() {
     auto x = to_repr<TestPerson>(p);
     auto b = to_value<TestPerson>(x);
 
-    std::cout << ShowG<TestPerson>().show(p) << std::endl;
+//    std::cout << ShowG<TestPerson>().show(p) << std::endl;
 
     return 0;
 }
