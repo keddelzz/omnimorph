@@ -97,8 +97,11 @@ int main() {
     std::cout << hlist() << std::endl;
     std::cout << test << std::endl;
 
-    SimpleAddress a("New Years Street", 32);
-    TestPerson p("Peter Finger", a, 55);
+    const char *streetName = "New Years Street";
+    const char *name = "Peter Finger";
+    SimpleAddress a(streetName, 32);
+    TestPerson p(name, a, 55);
+
     auto x = to_repr<TestPerson>(p);
     auto b = to_value<TestPerson>(x);
 
