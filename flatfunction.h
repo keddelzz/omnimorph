@@ -1,11 +1,13 @@
 #pragma once
 
+#include "flatpointer.h"
+
 class FlatFunction
 {
 public:
     template<typename A, typename B>
     constexpr FlatFunction(B (*f)(A))
-        : function_pointer(reinterpret_cast<uint64_t>(f))
+        : function_pointer(reinterpret_cast<FlatPointer>(f))
     {}
     template<typename A, typename B>
     constexpr B operator()(A arg) const {
@@ -14,5 +16,5 @@ public:
     }
 
 private:
-    uint64_t function_pointer;
+    FlatPointer function_pointer;
 };
