@@ -4,20 +4,6 @@
 #include "flatfunction.h"
 #include "hlist.h"
 #include "generic.h"
-//#include "show.h"
-
-/*
-template<typename T>
-struct ShowG
-{
-    constexpr ShowG() = default;
-    std::string show(T value) {
-        Show<typename Generic<T>::Repr> r;
-        auto repr = to_repr<T>(value);
-        return r.show(repr);
-    }
-};
-*/
 struct SimpleAddress
 {
 public:
@@ -104,8 +90,5 @@ int main() {
 
     auto x = to_repr<TestPerson>(p);
     auto b = to_value<TestPerson>(x);
-
-//    std::cout << ShowG<TestPerson>().show(p) << std::endl;
-
     return 0;
 }
