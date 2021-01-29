@@ -9,6 +9,7 @@ add_executable(${PROJECT_NAME}
     flatfunction.h
     hlist.h
     generic.h
+    testdata.h
     main.cpp
 )
 
