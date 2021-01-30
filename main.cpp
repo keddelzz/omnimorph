@@ -1,7 +1,5 @@
 #include <iostream>
-#include <functional>
 
-#include "flatfunction.h"
 #include "hlist.h"
 #include "generic.h"
 #include "testdata.h"
