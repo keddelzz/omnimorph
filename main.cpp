@@ -113,6 +113,11 @@ int main() {
         ;
 }
 
+// @TODO: Going from Type -> Repr
+// @TODO: Generalize HasShow for other type classes
+// @TODO: Try to get rid of fake type parameter (void)
+// @TODO: Try out inductive datastructures
+
 int main2() {
     constexpr const char *meh = "meh";
     auto test = hlist(1, 2, std::string(meh));
