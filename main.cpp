@@ -4,20 +4,23 @@
 #include "generic.h"
 #include "testdata.h"
 
-template<template<typename ...> class C, typename... T>
-class HasShow
-{
-    struct yes {};
-    struct no { char x[2]; };
+#define GENERATE_HAS_STATIC_METHOD(class_name, member_name)                  \
+    template<template<typename ...> class C, typename... T>                  \
+    class class_name                                                         \
+    {                                                                        \
+        struct yes {};                                                       \
+        struct no { char x[2]; };                                            \
+                                                                             \
+        template<template<typename ...> class C0, typename... T0>            \
+        static yes test( decltype(&C0<T0 ...>::member_name) ) { return {}; } \
+        template<template<typename ...> class C0, typename... T0>            \
+        static no test(...) { return {}; }                                   \
+                                                                             \
+    public:                                                                  \
+        enum { value = sizeof(test<C, T ...>(nullptr)) == sizeof(yes) };     \
+    };
 
-    template<template<typename ...> class C0, typename... T0>
-    static yes test( decltype(&C0<T0 ...>::show) ) { return {}; }
-    template<template<typename ...> class C0, typename... T0>
-    static no test(...) { return {}; }
-
-public:
-    enum { value = sizeof(test<C, T ...>(nullptr)) == sizeof(yes) };
-};
+GENERATE_HAS_STATIC_METHOD(HasShow, show)
 
 // show primitives
 template<typename T, typename = std::enable_if<false>>
@@ -126,7 +129,6 @@ int main() {
         ;
 }
 
-// @TODO: Generalize HasShow for other type classes
 // @TODO: Try to get rid of fake type parameter (void)
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
