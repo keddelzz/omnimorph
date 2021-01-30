@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include "hlist.h"
 #include "generic.h"
@@ -106,6 +107,24 @@ struct ShowG<T, void> {
 };
 
 template<typename T>
+struct ShowU<std::vector<T>, void>
+{
+    static std::string show(std::vector<T> value) {
+        std::string result("[");
+        auto first = true;
+        for (const T &x : value) {
+            if (!first) {
+                result.append(", ");
+            }
+            result.append(Show<T>::show(x));
+            first = false;
+        }
+        result.append("]");
+        return result;
+    }
+};
+
+template<typename T>
 std::string show(T value) {
     return Show<T>::show(value);
 }
@@ -114,9 +133,17 @@ int main() {
     struct Kek {};
 
     const char *streetName = "Nullptr Street";
-    const char *name = "Simon Segfault";
-    SimpleAddress a(streetName, 32);
-    TestPerson p(name, a, 55);
+    const SimpleAddress address(streetName, 0);
+
+    const char *aName = "Nicole Nullptr";
+    const TestPerson a(aName, address, 42);
+    const char *bName = "Simon Segfault";
+    const TestPerson b(bName, address, 42);
+
+    using Persons = std::vector<TestPerson>;
+    const Persons persons{a, b};
+    using Personss = std::vector<Persons>;
+    const Personss personss { persons, persons };
 
     std::cout
         << show(42) << std::endl
@@ -124,7 +151,9 @@ int main() {
         << show<HNil>({}) << std::endl
         << show(TestPerson_Repr_2(42, {})) << std::endl
 //        << show<Kek>({}) << std::endl
-        << show(p) << std::endl
+        << show(a) << std::endl
+        << show(persons) << std::endl
+        << show(personss) << std::endl
         << "the end" << std::endl
         ;
 }
