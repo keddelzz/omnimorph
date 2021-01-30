@@ -24,6 +24,7 @@ GENERATE_HAS_STATIC_METHOD(HasShow, show)
 
 template<typename T, typename = std::enable_if<false>>
 struct ShowP {
+//  Intentionally commented out
 //  static std::string show(T) { return std::string(); }
 };
 template<>
@@ -45,11 +46,13 @@ struct ShowP<std::string, void> {
 
 template<typename T, typename = std::enable_if<false>>
 struct ShowU {
+//  Intentionally commented out
 //  static std::string show(T); // no implementation
 };
 
 template<typename T, typename = std::enable_if<false>>
 struct ShowG {
+//  Intentionally commented out
 //  static std::string show(T); // no implementation
 };
 
