@@ -35,6 +35,10 @@ struct ShowP<bool, void> {
     static std::string show(bool value) { return value ? "true" : "false"; }
 };
 template<>
+struct ShowP<const char *, void> {
+    static std::string show(const char *value) { return std::string(value); }
+};
+template<>
 struct ShowP<std::string, void> {
     static std::string show(std::string value) { return value; }
 };
