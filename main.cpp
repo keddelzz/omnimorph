@@ -5,7 +5,21 @@
 #include "hlist.h"
 #include "generic.h"
 #include "testdata.h"
-#include "validspecialization.h"
+
+template<template<typename ...> class C, typename... T>
+class HasShow
+{
+    struct yes {};
+    struct no { char x[2]; };
+
+    template<template<typename ...> class C0, typename... T0>
+    static yes test( decltype(&C0<T0 ...>::show) ) ;
+    template<template<typename ...> class C0, typename... T0>
+    static no test(...);
+
+public:
+    enum { value = sizeof(test<C, T ...>(nullptr)) == sizeof(yes) };
+};
 
 // show primitives
 template<typename T, typename = std::enable_if<false>>
@@ -45,24 +59,24 @@ struct Show {
 };
 template<typename T> // always prefer primitive show instances
 struct Show<T, typename std::enable_if<
-        ValidSpecialization<ShowP, T>::value
+        HasShow<ShowP, T, void>::value
         >::type> {
-    static std::string show(T value) { return ShowP<T>::show(value); }
+    static std::string show(T value) { return ShowP<T, void>::show(value); }
 };
 template<typename T> // if no primitive exists, prefer user defined instance over generic
 struct Show<T, typename std::enable_if<
-        !ValidSpecialization<ShowP, T>::value and
-         ValidSpecialization<ShowU, T>::value
+        !HasShow<ShowP, T, void>::value and
+         HasShow<ShowU, T, void>::value
         >::type> {
-    static std::string show(T value) { return ShowU<T>::show(value); }
+    static std::string show(T value) { return ShowU<T, void>::show(value); }
 };
 template<typename T> // else use generic repr
 struct Show<T, typename std::enable_if<
-        !ValidSpecialization<ShowP, T>::value and
-        !ValidSpecialization<ShowU, T>::value and
-         ValidSpecialization<ShowG, T>::value
+        !HasShow<ShowP, T, void>::value and
+        !HasShow<ShowU, T, void>::value and
+         HasShow<ShowG, T, void>::value
         >::type> {
-    static std::string show(T value) { return ShowG<T>::show(value); }
+    static std::string show(T value) { return ShowG<T, void>::show(value); }
 };
 
 template<>
@@ -72,8 +86,8 @@ struct ShowG<HNil, void> {
 template<typename H, typename T>
 struct ShowG<HList<H, T>, void> {
     static std::string show(HList<H, T> value) {
-        Show<H> showHead;
-        Show<T> showTail;
+        Show<H, void> showHead;
+        Show<T, void> showTail;
         return showHead.show(value.head) + " :: " + showTail.show(value.tail);
     };
 };
@@ -84,12 +98,19 @@ std::string show(T value) {
 }
 
 int main() {
+/*
+    std::cout << HasShow<ShowP, int, void>::value << std::endl;
+    std::cout << HasShow<ShowP, HNil, void>::value << std::endl;
+    struct Kek {};
+    std::cout << HasShow<ShowP, Kek, void>::value << std::endl;
+*/
+
     std::cout
-        << show<int>(42)
-        << std::endl;
-    // @TODO: ValidSpecialization isn't the right thing!
-    //        We need to check whether ShowX<T>::show exists.
-    //        But I have a strong tingle if it works, once we solved the problem.
+        << show(42) << std::endl
+        << show<std::string>("asd") << std::endl
+        << show<HNil>({}) << std::endl
+        << show(TestPerson_Repr_2(42, {})) << std::endl
+        ;
 }
 
 int main2() {

@@ -9,7 +9,6 @@ add_executable(${PROJECT_NAME}
     flatfunction.h
     hlist.h
     generic.h
-    validspecialization.h
     testdata.h
     main.cpp
 )
