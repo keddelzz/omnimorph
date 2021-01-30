@@ -100,7 +100,7 @@ struct ShowG<T, void> {
     static std::string show(T value) {
         Generic<T> gen;
         Show<typename Generic<T>::Repr, void> showRepr;
-        return showRepr.show(to_repr(gen, value));
+        return "(" + showRepr.show(to_repr(gen, value)) + ")";
     };
 };
 
