@@ -110,23 +110,26 @@ std::string show(T value) {
 }
 
 int main() {
-/*
-    std::cout << HasShow<ShowP, int, void>::value << std::endl;
-    std::cout << HasShow<ShowP, HNil, void>::value << std::endl;
     struct Kek {};
-    std::cout << HasShow<ShowP, Kek, void>::value << std::endl;
-*/
+
+    const char *streetName = "Nullptr Street";
+    const char *name = "Simon Segfault";
+    SimpleAddress a(streetName, 32);
+    TestPerson p(name, a, 55);
 
     std::cout
         << show(42) << std::endl
         << show<std::string>("asd") << std::endl
         << show<HNil>({}) << std::endl
         << show(TestPerson_Repr_2(42, {})) << std::endl
+//        << show<Kek>({}) << std::endl
+        << show(p) << std::endl
+        << "the end" << std::endl
         ;
 }
 
 // @TODO: Going from Type -> Repr
-// @TODO: Remember the type of function pointer
+//        - Segfault, maybe we need @TODO: Remember the type of function pointer
 // @TODO: Generalize HasShow for other type classes
 // @TODO: Try to get rid of fake type parameter (void)
 // @TODO: Try out inductive datastructures
