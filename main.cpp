@@ -128,8 +128,6 @@ int main() {
         ;
 }
 
-// @TODO: Going from Type -> Repr
-//        - Segfault, maybe we need @TODO: Remember the type of function pointer
 // @TODO: Generalize HasShow for other type classes
 // @TODO: Try to get rid of fake type parameter (void)
 // @TODO: Try out inductive datastructures

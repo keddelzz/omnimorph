@@ -30,8 +30,8 @@ struct Generic<SimpleAddress>
     using Type = SimpleAddress;
     using Repr = SimpleAddress_Repr;
     constexpr Generic() = default;
-    FlatFunction to   { Generic_SimpleAddress_to };
-    FlatFunction from { Generic_SimpleAddress_from };
+    FlatFunction<const Type &, Repr> to   { Generic_SimpleAddress_to };
+    FlatFunction<const Repr &, Type> from { Generic_SimpleAddress_from };
 };
 
 class TestPerson
@@ -69,6 +69,6 @@ struct Generic<TestPerson>
     using Type = TestPerson;
     using Repr = TestPerson_Repr;
     constexpr Generic() = default;
-    FlatFunction to   { Generic_TestPerson_to };
-    FlatFunction from { Generic_TestPerson_from };
+    FlatFunction<const Type &, Repr> to   { Generic_TestPerson_to };
+    FlatFunction<const Repr &, Type> from { Generic_TestPerson_from };
 };

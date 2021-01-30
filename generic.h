@@ -7,8 +7,8 @@ struct Generic
 {
     using Type = T;
     using Repr = int; // generated
-    FlatFunction to;
-    FlatFunction from;
+    FlatFunction<const Type &, Repr> to;
+    FlatFunction<const Repr &, Type> from;
 };
 
 template<typename T>
@@ -21,7 +21,7 @@ typename Generic<T>::Repr to_repr(
 {
     using Type = typename Generic<T>::Type;
     using Repr = typename Generic<T>::Repr;
-    return generic.to.template operator()<Type, const Repr &>(value);
+    return generic.to(value);
 }
 
 template<typename T>
@@ -38,7 +38,7 @@ typename Generic<T>::Type to_value(
 {
     using Repr = typename Generic<T>::Repr;
     using Type = typename Generic<T>::Type;
-    return generic.from.template operator()<Repr, const Type &>(repr);
+    return generic.from(repr);
 }
 
 template<typename T>
