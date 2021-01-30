@@ -90,17 +90,17 @@ struct ShowG<HNil, void> {
 template<typename H, typename T>
 struct ShowG<HList<H, T>, void> {
     static std::string show(HList<H, T> value) {
-        Show<H, void> showHead;
-        Show<T, void> showTail;
-        return showHead.show(value.head) + " :: " + showTail.show(value.tail);
+        using ShowH = Show<H, void>;
+        using ShowT = Show<T, void>;
+        return ShowH::show(value.head) + " :: " + ShowT::show(value.tail);
     };
 };
 template<typename T>
 struct ShowG<T, void> {
     static std::string show(T value) {
         Generic<T> gen;
-        Show<typename Generic<T>::Repr, void> showRepr;
-        return "(" + showRepr.show(to_repr(gen, value)) + ")";
+        using ShowRepr = Show<typename Generic<T>::Repr, void>;
+        return "(" + ShowRepr::show(to_repr(gen, value)) + ")";
     };
 };
 
