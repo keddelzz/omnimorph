@@ -114,9 +114,11 @@ int main() {
 }
 
 // @TODO: Going from Type -> Repr
+// @TODO: Remember the type of function pointer
 // @TODO: Generalize HasShow for other type classes
 // @TODO: Try to get rid of fake type parameter (void)
 // @TODO: Try out inductive datastructures
+// @TODO: Going constexpr
 
 int main2() {
     constexpr const char *meh = "meh";
