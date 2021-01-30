@@ -130,6 +130,7 @@ int main() {
 // @TODO: Try to get rid of fake type parameter (void)
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
+// @TODO: Can we do Generic only using static functions?
 
 int main2() {
     constexpr const char *meh = "meh";
