@@ -24,7 +24,7 @@ GENERATE_HAS_STATIC_METHOD(HasShow, show)
 
 template<typename T, typename = std::enable_if<false>>
 struct ShowP {
-//    static std::string show(T); // no implementation
+//  static std::string show(T) { return std::string(); }
 };
 template<>
 struct ShowP<int, void> {
@@ -45,12 +45,12 @@ struct ShowP<std::string, void> {
 
 template<typename T, typename = std::enable_if<false>>
 struct ShowU {
-//    static std::string show(T); // no implementation
+//  static std::string show(T); // no implementation
 };
 
 template<typename T, typename = std::enable_if<false>>
 struct ShowG {
-//    static std::string show(T); // no implementation
+//  static std::string show(T); // no implementation
 };
 
 // forwarder
