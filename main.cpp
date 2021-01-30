@@ -95,6 +95,14 @@ struct ShowG<HList<H, T>, void> {
         return showHead.show(value.head) + " :: " + showTail.show(value.tail);
     };
 };
+template<typename T>
+struct ShowG<T, void> {
+    static std::string show(T value) {
+        Generic<T> gen;
+        Show<typename Generic<T>::Repr, void> showRepr;
+        return showRepr.show(to_repr(gen, value));
+    };
+};
 
 template<typename T>
 std::string show(T value) {
