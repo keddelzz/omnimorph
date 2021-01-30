@@ -22,7 +22,6 @@
 
 GENERATE_HAS_STATIC_METHOD(HasShow, show)
 
-// show primitives
 template<typename T, typename = std::enable_if<false>>
 struct ShowP {
 //    static std::string show(T); // no implementation
@@ -44,14 +43,11 @@ struct ShowP<std::string, void> {
     static std::string show(std::string value) { return value; }
 };
 
-// user defined
 template<typename T, typename = std::enable_if<false>>
 struct ShowU {
 //    static std::string show(T); // no implementation
 };
-// no specialization
 
-// leveraging generic repr
 template<typename T, typename = std::enable_if<false>>
 struct ShowG {
 //    static std::string show(T); // no implementation
