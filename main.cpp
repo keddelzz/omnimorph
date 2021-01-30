@@ -59,30 +59,33 @@ struct ShowG {
 
 // forwarder
 template<typename T, typename = std::enable_if<false>>
-struct Show {
-//    static std::string show(T); // no implementation
+struct ShowFwd {
+//  static std::string show(T); // no implementation
 };
 template<typename T> // always prefer primitive show instances
-struct Show<T, typename std::enable_if<
+struct ShowFwd<T, typename std::enable_if<
         HasShow<ShowP, T, void>::value
         >::type> {
     static std::string show(T value) { return ShowP<T, void>::show(value); }
 };
 template<typename T> // if no primitive exists, prefer user defined instance over generic
-struct Show<T, typename std::enable_if<
+struct ShowFwd<T, typename std::enable_if<
         !HasShow<ShowP, T, void>::value and
          HasShow<ShowU, T, void>::value
         >::type> {
     static std::string show(T value) { return ShowU<T, void>::show(value); }
 };
 template<typename T> // else use generic repr
-struct Show<T, typename std::enable_if<
+struct ShowFwd<T, typename std::enable_if<
         !HasShow<ShowP, T, void>::value and
         !HasShow<ShowU, T, void>::value and
          HasShow<ShowG, T, void>::value
         >::type> {
     static std::string show(T value) { return ShowG<T, void>::show(value); }
 };
+
+template<typename T>
+using Show = ShowFwd<T, void>;
 
 template<>
 struct ShowG<HNil, void> {
@@ -91,23 +94,21 @@ struct ShowG<HNil, void> {
 template<typename H, typename T>
 struct ShowG<HList<H, T>, void> {
     static std::string show(HList<H, T> value) {
-        using ShowH = Show<H, void>;
-        using ShowT = Show<T, void>;
-        return ShowH::show(value.head) + " :: " + ShowT::show(value.tail);
+        return Show<H>::show(value.head) + " :: " + Show<T>::show(value.tail);
     };
 };
 template<typename T>
 struct ShowG<T, void> {
     static std::string show(T value) {
         Generic<T> gen;
-        using ShowRepr = Show<typename Generic<T>::Repr, void>;
+        using ShowRepr = Show<typename Generic<T>::Repr>;
         return "(" + ShowRepr::show(to_repr(gen, value)) + ")";
     };
 };
 
 template<typename T>
 std::string show(T value) {
-    return Show<T, void>::show(value);
+    return Show<T>::show(value);
 }
 
 int main() {
@@ -129,7 +130,6 @@ int main() {
         ;
 }
 
-// @TODO: Try to get rid of fake type parameter (void)
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
 // @TODO: Can we do Generic only using static functions?
