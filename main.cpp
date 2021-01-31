@@ -31,13 +31,12 @@
     constexpr auto predicate_name = predicate_name##_helper<C, T ...>::value;
 
 #ifdef __cpp_concepts
-    #define GENERATE_HAS_STATIC_POSTFIX CONCEPTS
+#define GENERATE_HAS_STATIC_METHOD(predicate_name, member_name)               \
+    GENERATE_HAS_STATIC_METHOD_CONCEPTS(predicate_name, member_name)
 #else
-    #define GENERATE_HAS_STATIC_POSTFIX NO_CONCEPTS
-#endif
-
-#define GENERATE_HAS_STATIC_METHOD(predicate_name, member_name) \
+#define GENERATE_HAS_STATIC_METHOD(predicate_name, member_name)               \
     GENERATE_HAS_STATIC_METHOD_NO_CONCEPTS(predicate_name, member_name)
+#endif
 
 GENERATE_HAS_STATIC_METHOD(HasShow, show)
 
@@ -176,7 +175,6 @@ int main() {
         ;
 }
 
-// @TODO: Macro dispatch based on __cpp_concepts
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
 // @TODO: Can we do Generic only using static functions?
