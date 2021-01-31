@@ -5,21 +5,39 @@
 #include "generic.h"
 #include "testdata.h"
 
-#define GENERATE_HAS_STATIC_METHOD(class_name, member_name)                  \
-    template<template<typename ...> class C, typename... T>                  \
-    class class_name                                                         \
-    {                                                                        \
-        struct yes {};                                                       \
-        struct no { char x[2]; };                                            \
-                                                                             \
-        template<template<typename ...> class C0, typename... T0>            \
-        static yes test( decltype(&C0<T0 ...>::member_name) ) { return {}; } \
-        template<template<typename ...> class C0, typename... T0>            \
-        static no test(...) { return {}; }                                   \
-                                                                             \
-    public:                                                                  \
-        enum { value = sizeof(test<C, T ...>(nullptr)) == sizeof(yes) };     \
+#define GENERATE_HAS_STATIC_METHOD_CONCEPTS(predicate_name, member_name)      \
+    template<template<typename ...> class C, typename... T>                   \
+    concept predicate_name = requires {                                       \
+        C<T ...>::member_name;                                                \
     };
+
+#define GENERATE_HAS_STATIC_METHOD_NO_CONCEPTS(predicate_name, member_name)   \
+    template<template<typename ...> class C, typename... T>                   \
+    class predicate_name##_helper                                             \
+    {                                                                         \
+        struct yes {};                                                        \
+        struct no { char x[2]; };                                             \
+                                                                              \
+        template<template<typename ...> class C0, typename... T0>             \
+        static yes test( decltype(&C0<T0 ...>::member_name) ) { return {}; }  \
+        template<template<typename ...> class C0, typename... T0>             \
+        static no test(...) { return {}; }                                    \
+                                                                              \
+    public:                                                                   \
+        enum { value = sizeof(test<C, T ...>(nullptr)) == sizeof(yes) };      \
+    };                                                                        \
+                                                                              \
+    template<template<typename ...> class C, typename... T>                   \
+    constexpr auto predicate_name = predicate_name##_helper<C, T ...>::value;
+
+#ifdef __cpp_concepts
+    #define GENERATE_HAS_STATIC_POSTFIX CONCEPTS
+#else
+    #define GENERATE_HAS_STATIC_POSTFIX NO_CONCEPTS
+#endif
+
+#define GENERATE_HAS_STATIC_METHOD(predicate_name, member_name) \
+    GENERATE_HAS_STATIC_METHOD_NO_CONCEPTS(predicate_name, member_name)
 
 GENERATE_HAS_STATIC_METHOD(HasShow, show)
 
@@ -64,22 +82,22 @@ struct ShowFwd {
 };
 template<typename T> // always prefer primitive show instances
 struct ShowFwd<T, typename std::enable_if<
-        HasShow<ShowP, T, void>::value
+        HasShow<ShowP, T, void>
         >::type> {
     static std::string show(T value) { return ShowP<T, void>::show(value); }
 };
 template<typename T> // if no primitive exists, prefer user defined instance over generic
 struct ShowFwd<T, typename std::enable_if<
-        !HasShow<ShowP, T, void>::value and
-         HasShow<ShowU, T, void>::value
+        !HasShow<ShowP, T, void> and
+         HasShow<ShowU, T, void>
         >::type> {
     static std::string show(T value) { return ShowU<T, void>::show(value); }
 };
 template<typename T> // else use generic repr
 struct ShowFwd<T, typename std::enable_if<
-        !HasShow<ShowP, T, void>::value and
-        !HasShow<ShowU, T, void>::value and
-         HasShow<ShowG, T, void>::value
+        !HasShow<ShowP, T, void> and
+        !HasShow<ShowU, T, void> and
+         HasShow<ShowG, T, void>
         >::type> {
     static std::string show(T value) { return ShowG<T, void>::show(value); }
 };
@@ -158,6 +176,7 @@ int main() {
         ;
 }
 
+// @TODO: Macro dispatch based on __cpp_concepts
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
 // @TODO: Can we do Generic only using static functions?
