@@ -104,22 +104,36 @@ struct ShowFwd<T, typename std::enable_if<
 template<typename T>
 using Show = ShowFwd<T, void>;
 
+template<typename T>
+void show_class_members(std::string &, bool first, T value);
 template<>
-struct ShowG<HNil, void> {
-    static std::string show(HNil) { return "HNil"; }
+void show_class_members(std::string &, bool, HNil) {}
+template<typename Hd, typename Tl>
+void show_class_members(std::string &string, bool first, HList<Member<Hd>, Tl> list) {
+    if (not first) string.append(", ");
+    const auto &member = list.head;
+    string.append(member.name);
+    string.append("=");
+    string.append(Show<Hd>::show(member.value));
+    show_class_members(string, false, list.tail);
+}
+
+template<typename List>
+struct ShowG<Class<List>, void> {
+    static std::string show(Class<List> clazz) {
+        std::string result(clazz.name);
+        result.append("(");
+        show_class_members(result, true, clazz.value);
+        result.append(")");
+        return result;
+    }
 };
-template<typename H, typename T>
-struct ShowG<HList<H, T>, void> {
-    static std::string show(HList<H, T> value) {
-        return Show<H>::show(value.head) + " :: " + Show<T>::show(value.tail);
-    };
-};
+
 template<typename T>
 struct ShowG<T, void> {
     static std::string show(T value) {
-        Generic<T> gen;
         using ShowRepr = Show<typename Generic<T>::Repr>;
-        return "(" + ShowRepr::show(to_repr(gen, value)) + ")";
+        return ShowRepr::show(to_repr<T>(value));
     };
 };
 
@@ -165,8 +179,6 @@ int main() {
     std::cout
         << show(42) << std::endl
         << show<std::string>("asd") << std::endl
-        << show<HNil>({}) << std::endl
-        << show(TestPerson_Repr_2(42, {})) << std::endl
 //        << show<Kek>({}) << std::endl
         << show(a) << std::endl
         << show(persons) << std::endl
