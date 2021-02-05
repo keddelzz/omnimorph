@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME}
     generic.h
     testdata.h
     hasmember.h
+    show.h
     main.cpp
 )
 
