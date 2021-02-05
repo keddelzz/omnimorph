@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME}
     grepr.h
     generic.h
     testdata.h
+    hasmember.h
     main.cpp
 )
 
