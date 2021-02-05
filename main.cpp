@@ -133,7 +133,7 @@ template<typename T>
 struct ShowG<T, void> {
     static std::string show(T value) {
         using ShowRepr = Show<typename Generic<T>::Repr>;
-        return ShowRepr::show(to_repr<T>(value));
+        return ShowRepr::show(Generic<T>::to(value));
     };
 };
 
@@ -189,20 +189,3 @@ int main() {
 
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
-// @TODO: Can we do Generic only using static functions?
-
-int main2() {
-    constexpr const char *meh = "meh";
-    auto test = hlist(1, 2, std::string(meh));
-    std::cout << hlist() << std::endl;
-    std::cout << test << std::endl;
-
-    const char *streetName = "New Years Street";
-    const char *name = "Peter Finger";
-    SimpleAddress a(streetName, 32);
-    TestPerson p(name, a, 55);
-
-    auto x = to_repr<TestPerson>(p);
-    auto b = to_value<TestPerson>(x);
-    return 0;
-}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 struct HNil {};
 
 template<typename H, typename T>
