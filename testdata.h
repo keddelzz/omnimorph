@@ -68,7 +68,7 @@ struct Generic<TestPerson>
         constexpr auto tl0 = TestPerson_Repr_0(member_of(TestPerson, name), tl1);
         return TestPerson_Repr("TestPerson", FlatPointer(&value), tl0);
     }
-    static Type Generic_TestPerson_from(const Repr &repr) {
+    static Type from(const Repr &repr) {
         const auto &tl0 = repr.members;
         const auto &tl1 = tl0.tail;
         const auto &tl2 = tl1.tail;
