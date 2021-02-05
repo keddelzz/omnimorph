@@ -104,26 +104,27 @@ struct ShowFwd<T, typename std::enable_if<
 template<typename T>
 using Show = ShowFwd<T, void>;
 
-template<typename T>
-void show_class_members(std::string &, bool first, T value);
-template<>
-void show_class_members(std::string &, bool, HNil) {}
-template<typename Hd, typename Tl>
-void show_class_members(std::string &string, bool first, HList<Member<Hd>, Tl> list) {
+template<typename T, typename Ms, typename List>
+void show_class_members(Class<T, Ms> &, std::string &, bool first, List list);
+template<typename T, typename Ms>
+void show_class_members(Class<T, Ms> &, std::string &, bool, HNil) {}
+template<typename T, typename Ms, typename Hd, typename Tl>
+void show_class_members(Class<T, Ms> &cls, std::string &string, bool first, HList<Member<Hd>, Tl> list) {
     if (not first) string.append(", ");
     const auto &member = list.head;
     string.append(member.name);
     string.append("=");
-    string.append(Show<Hd>::show(member.value));
-    show_class_members(string, false, list.tail);
+    auto member_pointer = member.of(cls.base);
+    string.append(Show<Hd>::show(*member_pointer));
+    show_class_members(cls, string, false, list.tail);
 }
 
-template<typename List>
-struct ShowG<Class<List>, void> {
-    static std::string show(Class<List> clazz) {
+template<typename T, typename Ms>
+struct ShowG<Class<T, Ms>, void> {
+    static std::string show(Class<T, Ms> clazz) {
         std::string result(clazz.name);
         result.append("(");
-        show_class_members(result, true, clazz.value);
+        show_class_members(clazz, result, true, clazz.members);
         result.append(")");
         return result;
     }
@@ -186,6 +187,8 @@ int main() {
         << "the end" << std::endl
         ;
 }
+
+// @TODO: Does the assemble work?
 
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
