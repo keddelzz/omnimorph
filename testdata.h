@@ -1,5 +1,7 @@
 #pragma once
 
+#include "generic.h"
+
 struct SimpleAddress
 {
 public:
@@ -19,8 +21,9 @@ using SimpleAddress_Repr   = Class<SimpleAddress, SimpleAddress_Repr_0>;
 template<>
 struct Generic<SimpleAddress>
 {
-    using Type = SimpleAddress;
-    using Repr = SimpleAddress_Repr;
+    using Type    = SimpleAddress;
+    using Members = SimpleAddress_Repr_0;
+    using Repr    = SimpleAddress_Repr;
     constexpr Generic() = default;
     static Repr to(const Type &value) {
         constexpr SimpleAddress_Repr_1 tl1(member_of(SimpleAddress, house_number), {});
@@ -59,8 +62,9 @@ using TestPerson_Repr   = Class<TestPerson, TestPerson_Repr_0>;
 template<>
 struct Generic<TestPerson>
 {
-    using Type = TestPerson;
-    using Repr = TestPerson_Repr;
+    using Type    = TestPerson;
+    using Members = TestPerson_Repr_0;
+    using Repr    = TestPerson_Repr;
     constexpr Generic() = default;
     static Repr to(const Type &value) {
         constexpr auto tl2 = TestPerson_Repr_2(member_of(TestPerson, age), {});
@@ -98,8 +102,9 @@ using Vec3_Repr   = Class<Vec3, Vec3_Repr_0>;
 template<>
 struct Generic<Vec3>
 {
-    using Type = Vec3;
-    using Repr = Vec3_Repr;
+    using Type    = Vec3;
+    using Members = Vec3_Repr_0;
+    using Repr    = Vec3_Repr;
     constexpr Generic() = default;
     static Repr to(const Type &value) {
         constexpr auto tl2 = Vec3_Repr_2(member_of(Vec3, x), {});
@@ -137,8 +142,9 @@ using Vac3_Repr   = Class<Vac3, Vac3_Repr_0>;
 template<>
 struct Generic<Vac3>
 {
-    using Type = Vac3;
-    using Repr = Vac3_Repr;
+    using Type    = Vac3;
+    using Members = Vac3_Repr_0;
+    using Repr    = Vac3_Repr;
     constexpr Generic() = default;
     static Repr to(const Type &value) {
         constexpr auto tl2 = Vac3_Repr_2(member_of(Vac3, x), {});
@@ -151,9 +157,9 @@ struct Generic<Vac3>
         const auto &tl1 = tl0.tail;
         const auto &tl2 = tl1.tail;
         return Vac3(
-                *tl0.head.of(repr.base),
-                *tl1.head.of(repr.base),
-                *tl2.head.of(repr.base)
+            *tl0.head.of(repr.base),
+            *tl1.head.of(repr.base),
+            *tl2.head.of(repr.base)
         );
     };
 };
