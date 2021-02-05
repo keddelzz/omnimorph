@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME}
     hlist.h
+    grepr.h
     generic.h
     testdata.h
     main.cpp
