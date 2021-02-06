@@ -3,40 +3,46 @@
 #include "hlist.h"
 #include "flatpointer.h"
 
-template<typename T, typename Members>
-class Class {
+template<typename T>
+class MemberValue
+{
 public:
-    constexpr explicit Class(
-        const char *name
-        , FlatPointer base
-        , Members members)
+    constexpr MemberValue(const char *name, T value)
         : name(name)
-        , base(base)
-        , members(members)
+        , value(value)
     {}
 
     const char  *name;
-    FlatPointer base;
-    Members     members;
+    T           value;
 };
 
 template<typename T>
-class Member {
+class MemberRef
+{
 public:
-    constexpr Member(const char *name, FlatPointer offset)
-        : name(name)
-        , offset(offset)
+    constexpr MemberRef(const char *name, T &ref)
+       : name(name)
+       , ref(ref)
     {}
 
     const char  *name;
-    FlatPointer offset;
+    T           &ref;
+};
 
-    constexpr T *of(FlatPointer base) const {
-        return (T *)(base + offset);
-    }
+template<typename T>
+class MemberPointer
+{
+public:
+    constexpr MemberPointer(const char *name, T *pointer)
+       : name(name)
+       , pointer(pointer)
+    {}
+
+    const char  *name;
+    T           *pointer;
 };
 
 template <class T, class M> M type_of_member_inference_helper(M T:: *);
 #define type_of_member_pointer(mem) decltype(type_of_member_inference_helper(mem))
 #define type_of_member(Type, name) type_of_member_pointer(&Type::name)
-#define member_of(Type, name) Member<type_of_member(Type, name)>(#name, FlatPointer(offsetof(Type, name)))
+#define member_of(Type, name) MemberPointer<type_of_member(Type, name)>(#name, FlatPointer(offsetof(Type, name)))
