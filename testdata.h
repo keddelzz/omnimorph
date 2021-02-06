@@ -312,37 +312,149 @@ struct Vec3
     float x, y, z;
 };
 
-/*
-using Vec3_Repr_3 = HNil;
-using Vec3_Repr_2 = HList<Member<float>, Vec3_Repr_3>;
-using Vec3_Repr_1 = HList<Member<float>, Vec3_Repr_2>;
-using Vec3_Repr_0 = HList<Member<float>, Vec3_Repr_1>;
-using Vec3_Repr   = Class<Vec3, Vec3_Repr_0>;
 template<>
-struct Generic<Vec3>
+struct CopyGeneric<Vec3>
 {
-    using Type    = Vec3;
-    using Members = Vec3_Repr_0;
-    using Repr    = Vec3_Repr;
-    constexpr Generic() = default;
+    using Vec3_Repr_3 = HNil;
+    using Vec3_Repr_2 = HList<float, Vec3_Repr_3>;
+    using Vec3_Repr_1 = HList<float, Vec3_Repr_2>;
+    using Vec3_Repr_0 = HList<float, Vec3_Repr_1>;
+    using Vec3_Repr   = Vec3_Repr_0;
+
+    using Type = Vec3;
+    using Repr = Vec3_Repr;
+
     static Repr to(const Type &value) {
-        constexpr auto tl2 = Vec3_Repr_2(member_of(Vec3, x), {});
-        constexpr auto tl1 = Vec3_Repr_1(member_of(Vec3, y), tl2);
-        constexpr auto tl0 = Vec3_Repr_0(member_of(Vec3, z), tl1);
-        return Vec3_Repr("Vec3", FlatPointer(&value), tl0);
+        const Vec3_Repr_3 tl3{};
+        const Vec3_Repr_2 tl2(value.z, tl3);
+        const Vec3_Repr_1 tl1(value.y, tl2);
+        const Vec3_Repr_0 tl0(value.x, tl1);
+        return tl0;
     }
+
     static Type from(const Repr &repr) {
-        const auto &tl0 = repr.members;
-        const auto &tl1 = tl0.tail;
-        const auto &tl2 = tl1.tail;
-        return Vec3(
-            *tl0.head.of(repr.base),
-            *tl1.head.of(repr.base),
-            *tl2.head.of(repr.base)
-        );
-    };
+        const auto tl0 = repr;
+        const auto tl1 = tl0.tail;
+        const auto tl2 = tl1.tail;
+        const auto tl3 = tl2.tail;
+        return Vec3(tl0.head, tl1.head, tl2.head);
+    }
 };
-*/
+
+template<>
+struct LabelledCopyGeneric<Vec3>
+{
+    using Vec3_Repr_3 = HNil;
+    using Vec3_Repr_2 = HList<MemberValue<float>, Vec3_Repr_3>;
+    using Vec3_Repr_1 = HList<MemberValue<float>, Vec3_Repr_2>;
+    using Vec3_Repr_0 = HList<MemberValue<float>, Vec3_Repr_1>;
+    using Vec3_Repr   = Vec3_Repr_0;
+
+    using Type = Vec3;
+    using Repr = Vec3_Repr;
+    static constexpr const char *name = "Vec3";
+
+    static Repr to(const Type & value) {
+        const Vec3_Repr_3 tl3{};
+        const Vec3_Repr_2 tl2(member_value(value, z), tl3);
+        const Vec3_Repr_1 tl1(member_value(value, y), tl2);
+        const Vec3_Repr_0 tl0(member_value(value, x), tl1);
+        return tl0;
+    }
+
+    static Type from(const Repr &repr) {
+        const auto tl0 = repr;
+        const auto tl1 = tl0.tail;
+        const auto tl2 = tl1.tail;
+        const auto tl3 = tl2.tail;
+        return Vec3(tl0.head.value, tl1.head.value, tl2.head.value);
+    }
+};
+
+template<>
+struct ReferenceGeneric<Vec3>
+{
+    using Vec3_Repr_3 = HNil;
+    using Vec3_Repr_2 = HList<float &, Vec3_Repr_3>;
+    using Vec3_Repr_1 = HList<float &, Vec3_Repr_2>;
+    using Vec3_Repr_0 = HList<float &, Vec3_Repr_1>;
+    using Vec3_Repr   = Vec3_Repr_0;
+
+    using Type = Vec3;
+    using Repr = Vec3_Repr;
+
+    static Repr to(Type &value) {
+        const Vec3_Repr_3 tl3{};
+        const Vec3_Repr_2 tl2(value.z, tl3);
+        const Vec3_Repr_1 tl1(value.y, tl2);
+        const Vec3_Repr_0 tl0(value.x, tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct LabelledReferenceGeneric<Vec3>
+{
+    using Vec3_Repr_3 = HNil;
+    using Vec3_Repr_2 = HList<MemberReference<float>, Vec3_Repr_3>;
+    using Vec3_Repr_1 = HList<MemberReference<float>, Vec3_Repr_2>;
+    using Vec3_Repr_0 = HList<MemberReference<float>, Vec3_Repr_1>;
+    using Vec3_Repr   = Vec3_Repr_0;
+
+    using Type = Vec3;
+    using Repr = Vec3_Repr;
+    static constexpr const char *name = "Vec3";
+
+    static Repr to(Type &value) {
+        const Vec3_Repr_3 tl3{};
+        const Vec3_Repr_2 tl2(member_reference(value, z), tl3);
+        const Vec3_Repr_1 tl1(member_reference(value, y), tl2);
+        const Vec3_Repr_0 tl0(member_reference(value, x), tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct PointerGeneric<Vec3>
+{
+    using Vec3_Repr_3 = HNil;
+    using Vec3_Repr_2 = HList<float *, Vec3_Repr_3>;
+    using Vec3_Repr_1 = HList<float *, Vec3_Repr_2>;
+    using Vec3_Repr_0 = HList<float *, Vec3_Repr_1>;
+    using Vec3_Repr   = Vec3_Repr_0;
+
+    using Type = Vec3;
+    using Repr = Vec3_Repr;
+
+    static Repr to(Type &value) {
+        const Vec3_Repr_3 tl3{};
+        const Vec3_Repr_2 tl2(&value.z, tl3);
+        const Vec3_Repr_1 tl1(&value.y, tl2);
+        const Vec3_Repr_0 tl0(&value.x, tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct LabelledPointerGeneric<Vec3>
+{
+    using Vec3_Repr_3 = HNil;
+    using Vec3_Repr_2 = HList<MemberPointer<float>, Vec3_Repr_3>;
+    using Vec3_Repr_1 = HList<MemberPointer<float>, Vec3_Repr_2>;
+    using Vec3_Repr_0 = HList<MemberPointer<float>, Vec3_Repr_1>;
+    using Vec3_Repr   = Vec3_Repr_0;
+
+    using Type = Vec3;
+    using Repr = Vec3_Repr;
+
+    static Repr to(Type &value) {
+        const Vec3_Repr_3 tl3{};
+        const Vec3_Repr_2 tl2(member_pointer(value, z), tl3);
+        const Vec3_Repr_1 tl1(member_pointer(value, y), tl2);
+        const Vec3_Repr_0 tl0(member_pointer(value, x), tl1);
+        return tl0;
+    }
+};
 
 struct Vac3
 {
