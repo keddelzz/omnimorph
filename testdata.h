@@ -14,29 +14,133 @@ public:
     int house_number;
 };
 
-using SimpleAddress_Repr_2 = HNil;
-using SimpleAddress_Repr_1 = HList<Member<int>, SimpleAddress_Repr_2>;
-using SimpleAddress_Repr_0 = HList<Member<const char *>, SimpleAddress_Repr_1>;
-using SimpleAddress_Repr   = Class<SimpleAddress, SimpleAddress_Repr_0>;
 template<>
-struct Generic<SimpleAddress>
+struct CopyGeneric<SimpleAddress>
 {
-    using Type    = SimpleAddress;
-    using Members = SimpleAddress_Repr_0;
-    using Repr    = SimpleAddress_Repr;
-    constexpr Generic() = default;
+    using SimpleAddress_Repr_2 = HNil;
+    using SimpleAddress_Repr_1 = HList<int, SimpleAddress_Repr_2>;
+    using SimpleAddress_Repr_0 = HList<const char *, SimpleAddress_Repr_1>;
+    using SimpleAddress_Repr   = SimpleAddress_Repr_0;
+
+    using Type = SimpleAddress;
+    using Repr = SimpleAddress_Repr;
+
     static Repr to(const Type &value) {
-        constexpr SimpleAddress_Repr_1 tl1(member_of(SimpleAddress, house_number), {});
-        constexpr SimpleAddress_Repr_0 tl0(member_of(SimpleAddress, street_name), tl1);
-        return SimpleAddress_Repr("SimpleAddress", FlatPointer(&value), tl0);
-    };
+        const SimpleAddress_Repr_2 tl2{};
+        const SimpleAddress_Repr_1 tl1(value.house_number, tl2);
+        const SimpleAddress_Repr_0 tl0(value.street_name, tl1);
+        return tl0;
+    }
+
     static Type from(const Repr &repr) {
-        const auto &tl0 = repr.members;
-        const auto &tl1 = tl0.tail;
-        return SimpleAddress(
-            *tl0.head.of(repr.base),
-            *tl1.head.of(repr.base)
-        );
+        const auto tl0 = repr;
+        const auto tl1 = tl0.tail;
+        const auto tl2 = tl1.tail;
+        return SimpleAddress(tl0.head, tl1.head);
+    }
+};
+
+template<>
+struct LabelledCopyGeneric<SimpleAddress>
+{
+    using SimpleAddress_Repr_2 = HNil;
+    using SimpleAddress_Repr_1 = HList<MemberValue<int>, SimpleAddress_Repr_2>;
+    using SimpleAddress_Repr_0 = HList<MemberValue<const char *>, SimpleAddress_Repr_1>;
+    using SimpleAddress_Repr   = SimpleAddress_Repr_0;
+
+    using Type = SimpleAddress;
+    using Repr = SimpleAddress_Repr;
+    static constexpr const char *name = "SimpleAddress";
+
+    static Repr to(const Type & value) {
+        const SimpleAddress_Repr_2 tl2{};
+        const SimpleAddress_Repr_1 tl1(member_value(value, house_number), tl2);
+        const SimpleAddress_Repr_0 tl0(member_value(value, street_name), tl1);
+        return tl0;
+    }
+
+    static Type from(const Repr &repr) {
+        const auto tl0 = repr;
+        const auto tl1 = tl0.tail;
+        const auto tl2 = tl1.tail;
+        return SimpleAddress(tl0.head.value, tl1.head.value);
+    }
+};
+
+template<>
+struct ReferenceGeneric<SimpleAddress>
+{
+    using SimpleAddress_Repr_2 = HNil;
+    using SimpleAddress_Repr_1 = HList<int &, SimpleAddress_Repr_2>;
+    using SimpleAddress_Repr_0 = HList<const char * &, SimpleAddress_Repr_1>;
+    using SimpleAddress_Repr   = SimpleAddress_Repr_0;
+
+    using Type = SimpleAddress;
+    using Repr = SimpleAddress_Repr;
+
+    static Repr to(Type &value) {
+        const SimpleAddress_Repr_2 tl2{};
+        const SimpleAddress_Repr_1 tl1(value.house_number, tl2);
+        const SimpleAddress_Repr_0 tl0(value.street_name, tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct LabelledReferenceGeneric<SimpleAddress>
+{
+    using SimpleAddress_Repr_2 = HNil;
+    using SimpleAddress_Repr_1 = HList<MemberReference<int>, SimpleAddress_Repr_2>;
+    using SimpleAddress_Repr_0 = HList<MemberReference<const char *>, SimpleAddress_Repr_1>;
+    using SimpleAddress_Repr   = SimpleAddress_Repr_0;
+
+    using Type = SimpleAddress;
+    using Repr = SimpleAddress_Repr;
+    static constexpr const char *name = "SimpleAddress";
+
+    static Repr to(Type &value) {
+        const SimpleAddress_Repr_2 tl2{};
+        const SimpleAddress_Repr_1 tl1(member_reference(value, house_number), tl2);
+        const SimpleAddress_Repr_0 tl0(member_reference(value, street_name), tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct PointerGeneric<SimpleAddress>
+{
+    using SimpleAddress_Repr_2 = HNil;
+    using SimpleAddress_Repr_1 = HList<int *, SimpleAddress_Repr_2>;
+    using SimpleAddress_Repr_0 = HList<const char * *, SimpleAddress_Repr_1>;
+    using SimpleAddress_Repr   = SimpleAddress_Repr_0;
+
+    using Type = SimpleAddress;
+    using Repr = SimpleAddress_Repr;
+
+    static Repr to(Type &value) {
+        const SimpleAddress_Repr_2 tl2{};
+        const SimpleAddress_Repr_1 tl1(&value.house_number, tl2);
+        const SimpleAddress_Repr_0 tl0(&value.street_name, tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct LabelledPointerGeneric<SimpleAddress>
+{
+    using SimpleAddress_Repr_2 = HNil;
+    using SimpleAddress_Repr_1 = HList<MemberPointer<int>, SimpleAddress_Repr_2>;
+    using SimpleAddress_Repr_0 = HList<MemberPointer<const char *>, SimpleAddress_Repr_1>;
+    using SimpleAddress_Repr   = SimpleAddress_Repr_0;
+
+    using Type = SimpleAddress;
+    using Repr = SimpleAddress_Repr;
+
+    static Repr to(Type &value) {
+        const SimpleAddress_Repr_2 tl2{};
+        const SimpleAddress_Repr_1 tl1(member_pointer(value, house_number), tl2);
+        const SimpleAddress_Repr_0 tl0(member_pointer(value, street_name), tl1);
+        return tl0;
     }
 };
 
@@ -54,6 +158,7 @@ public:
     int age;
 };
 
+/*
 using TestPerson_Repr_3 = HNil;
 using TestPerson_Repr_2 = HList<Member<int>, TestPerson_Repr_3>;
 using TestPerson_Repr_1 = HList<Member<SimpleAddress>, TestPerson_Repr_2>;
@@ -83,6 +188,7 @@ struct Generic<TestPerson>
         );
     };
 };
+*/
 
 struct Vec3
 {
@@ -94,6 +200,7 @@ struct Vec3
     float x, y, z;
 };
 
+/*
 using Vec3_Repr_3 = HNil;
 using Vec3_Repr_2 = HList<Member<float>, Vec3_Repr_3>;
 using Vec3_Repr_1 = HList<Member<float>, Vec3_Repr_2>;
@@ -123,6 +230,7 @@ struct Generic<Vec3>
         );
     };
 };
+*/
 
 struct Vac3
 {
@@ -134,6 +242,7 @@ struct Vac3
     float x, y, z;
 };
 
+/*
 using Vac3_Repr_3 = HNil;
 using Vac3_Repr_2 = HList<Member<float>, Vac3_Repr_3>;
 using Vac3_Repr_1 = HList<Member<float>, Vac3_Repr_2>;
@@ -163,3 +272,4 @@ struct Generic<Vac3>
         );
     };
 };
+*/

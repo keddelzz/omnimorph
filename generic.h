@@ -59,7 +59,7 @@ struct LabelledCopyGeneric
     using Type = T;
     using Repr = HNil;                           // generated
     static constexpr const char *name = nullptr; // generated
-//  static Repr to(const Type & value);          // generated
+//  static Repr to(const Type &value);           // generated
 //  static Type from(const Repr &repr);          // generated
 };
 
@@ -74,7 +74,7 @@ struct LabelledCopyGeneric
 //         C c;
 //     };
 //
-// then `RefGeneric<T>::Repr` would be of type
+// then `ReferenceGeneric<T>::Repr` would be of type
 //
 //     HList<
 //         A &,
@@ -85,11 +85,11 @@ struct LabelledCopyGeneric
 //                 HNil>>>
 //
 template<typename T>
-struct RefGeneric
+struct ReferenceGeneric
 {
     using Type = T;
     using Repr = HNil;                           // generated
-//  static Repr to(const Type & value);          // generated
+//  static Repr to(Type &value);                 // generated
 };
 
 //
@@ -103,7 +103,7 @@ struct RefGeneric
 //         C c;
 //     };
 //
-// then `LabelledRefGeneric<T>::Repr` would be of type
+// then `LabelledReferenceGeneric<T>::Repr` would be of type
 //
 //     HList<
 //         MemberRef<A>,
@@ -114,12 +114,12 @@ struct RefGeneric
 //                 HNil>>>
 //
 template<typename T>
-struct LabelledRefGeneric
+struct LabelledReferenceGeneric
 {
     using Type = T;
     using Repr = HNil;                           // generated
     static constexpr const char *name = nullptr; // generated
-//  static Repr to(const Type & value);          // generated
+//  static Repr to(Type &value);                 // generated
 };
 
 //
@@ -148,7 +148,7 @@ struct PointerGeneric
 {
     using Type = T;
     using Repr = HNil;                           // generated
-//  static Repr to(const Type & value);          // generated
+//  static Repr to(Type &value);                 // generated
 };
 
 //
@@ -178,5 +178,5 @@ struct LabelledPointerGeneric
     using Type = T;
     using Repr = HNil;                           // generated
     static constexpr const char *name = nullptr; // generated
-//  static Repr to(const Type & value);          // generated
+//  static Repr to(Type &value);                 // generated
 };

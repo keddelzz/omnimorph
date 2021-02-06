@@ -16,11 +16,13 @@ public:
     T           value;
 };
 
+#define member_value(value, member) MemberValue(#member, value.member)
+
 template<typename T>
-class MemberRef
+class MemberReference
 {
 public:
-    constexpr MemberRef(const char *name, T &ref)
+    constexpr MemberReference(const char *name, T &ref)
        : name(name)
        , ref(ref)
     {}
@@ -28,6 +30,8 @@ public:
     const char  *name;
     T           &ref;
 };
+
+#define member_reference(value, member) MemberReference(#member, value.member)
 
 template<typename T>
 class MemberPointer
@@ -41,6 +45,8 @@ public:
     const char  *name;
     T           *pointer;
 };
+
+#define member_pointer(value, member) MemberPointer(#member, &value.member)
 
 template <class T, class M> M type_of_member_inference_helper(M T:: *);
 #define type_of_member_pointer(mem) decltype(type_of_member_inference_helper(mem))

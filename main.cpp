@@ -49,10 +49,10 @@ public:
 int main() {
 //    const auto kek = Morpher(Vec3(1, 2, 3)).morph<Vac3>();
 
-    const auto x = member_of(Vec3, x);
-    const auto y = member_of(Vec3, y);
-    const auto z = member_of(Vec3, z);
-    const auto w = member_of(Muh, asd);
+//    const auto x = member_of(Vec3, x);
+//    const auto y = member_of(Vec3, y);
+//    const auto z = member_of(Vec3, z);
+//    const auto w = member_of(Muh, asd);
 
     return EXIT_SUCCESS;
 }
