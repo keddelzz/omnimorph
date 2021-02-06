@@ -13,7 +13,7 @@ add_executable(${PROJECT_NAME}
     hasmember.h
     show.h
     main.cpp
-)
+        morph.h)
 
 target_compile_features(${PROJECT_NAME}
     PRIVATE cxx_constexpr

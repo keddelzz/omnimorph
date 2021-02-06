@@ -1,0 +1,4 @@
+// @TODO: Do we need an Generic instance for std::move?
+// @TODO: Try out inductive datastructures
+// @TODO: Going constexpr
+// @TODO: Const versions of reference and pointer generic-instances
