@@ -3,6 +3,7 @@
 
 #include "testdata.h"
 #include "hasmember.h"
+#include "show.h"
 
 /*
 template<typename Source>
@@ -35,24 +36,18 @@ private:
 };
 */
 
-class Tst {
-    uint8_t asd[5000];
-};
-
-class Muh {
-public:
-    const char *name;
-    Tst asd;
-    const char *name2;
-};
-
 int main() {
-//    const auto kek = Morpher(Vec3(1, 2, 3)).morph<Vac3>();
+    SimpleAddress a("Nullptr Street", 55);
+    TestPerson b("Simon Segfault", a, 42);
+    Vec3 t(1, 2, 3);
+    Vac3 u(9, 8, 7);
 
-//    const auto a = member_of(Vec3, a);
-//    const auto b = member_of(Vec3, b);
-//    const auto c = member_of(Vec3, c);
-//    const auto w = member_of(Muh, asd);
+    std::cout
+        << show(a) << std::endl
+        << show(b) << std::endl
+        << show(t) << std::endl
+        << show(u) << std::endl
+        ;
 
     return EXIT_SUCCESS;
 }
@@ -61,3 +56,4 @@ int main() {
 // @TODO: Do we need an Generic instance for std::move?
 // @TODO: Try out inductive datastructures
 // @TODO: Going constexpr
+// @TODO: Const versions of reference and pointer generic-instances

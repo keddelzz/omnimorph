@@ -354,7 +354,7 @@ struct LabelledCopyGeneric<Vec3>
     using Repr = Vec3_Repr;
     static constexpr const char *name = "Vec3";
 
-    static Repr to(const Type & value) {
+    static Repr to(const Type &value) {
         const Vec3_Repr_3 tl3{};
         const Vec3_Repr_2 tl2(member_value(value, z), tl3);
         const Vec3_Repr_1 tl1(member_value(value, y), tl2);
@@ -508,7 +508,7 @@ struct LabelledCopyGeneric<Vac3>
     using Repr = Vac3_Repr;
     static constexpr const char *name = "Vac3";
 
-    static Repr to(const Type & value) {
+    static Repr to(const Type &value) {
         const Vac3_Repr_3 tl3{};
         const Vac3_Repr_2 tl2(member_value(value, c), tl3);
         const Vac3_Repr_1 tl1(member_value(value, b), tl2);
