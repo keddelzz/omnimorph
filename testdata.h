@@ -158,37 +158,149 @@ public:
     int age;
 };
 
-/*
-using TestPerson_Repr_3 = HNil;
-using TestPerson_Repr_2 = HList<Member<int>, TestPerson_Repr_3>;
-using TestPerson_Repr_1 = HList<Member<SimpleAddress>, TestPerson_Repr_2>;
-using TestPerson_Repr_0 = HList<Member<const char *>, TestPerson_Repr_1>;
-using TestPerson_Repr   = Class<TestPerson, TestPerson_Repr_0>;
 template<>
-struct Generic<TestPerson>
+struct CopyGeneric<TestPerson>
 {
-    using Type    = TestPerson;
-    using Members = TestPerson_Repr_0;
-    using Repr    = TestPerson_Repr;
-    constexpr Generic() = default;
+    using TestPerson_Repr_3 = HNil;
+    using TestPerson_Repr_2 = HList<int, TestPerson_Repr_3>;
+    using TestPerson_Repr_1 = HList<SimpleAddress, TestPerson_Repr_2>;
+    using TestPerson_Repr_0 = HList<const char *, TestPerson_Repr_1>;
+    using TestPerson_Repr   = TestPerson_Repr_0;
+
+    using Type = TestPerson;
+    using Repr = TestPerson_Repr;
+
     static Repr to(const Type &value) {
-        constexpr auto tl2 = TestPerson_Repr_2(member_of(TestPerson, age), {});
-        constexpr auto tl1 = TestPerson_Repr_1(member_of(TestPerson, address), tl2);
-        constexpr auto tl0 = TestPerson_Repr_0(member_of(TestPerson, name), tl1);
-        return TestPerson_Repr("TestPerson", FlatPointer(&value), tl0);
+        const TestPerson_Repr_3 tl3{};
+        const TestPerson_Repr_2 tl2(value.age, tl3);
+        const TestPerson_Repr_1 tl1(value.address, tl2);
+        const TestPerson_Repr_0 tl0(value.name, tl1);
+        return tl0;
     }
+
     static Type from(const Repr &repr) {
-        const auto &tl0 = repr.members;
-        const auto &tl1 = tl0.tail;
-        const auto &tl2 = tl1.tail;
-        return TestPerson(
-            *tl0.head.of(repr.base),
-            *tl1.head.of(repr.base),
-            *tl2.head.of(repr.base)
-        );
-    };
+        const auto tl0 = repr;
+        const auto tl1 = tl0.tail;
+        const auto tl2 = tl1.tail;
+        const auto tl3 = tl2.tail;
+        return TestPerson(tl0.head, tl1.head, tl2.head);
+    }
 };
-*/
+
+template<>
+struct LabelledCopyGeneric<TestPerson>
+{
+    using TestPerson_Repr_3 = HNil;
+    using TestPerson_Repr_2 = HList<MemberValue<int>, TestPerson_Repr_3>;
+    using TestPerson_Repr_1 = HList<MemberValue<SimpleAddress>, TestPerson_Repr_2>;
+    using TestPerson_Repr_0 = HList<MemberValue<const char *>, TestPerson_Repr_1>;
+    using TestPerson_Repr   = TestPerson_Repr_0;
+
+    using Type = TestPerson;
+    using Repr = TestPerson_Repr;
+    static constexpr const char *name = "TestPerson";
+
+    static Repr to(const Type & value) {
+        const TestPerson_Repr_3 tl3{};
+        const TestPerson_Repr_2 tl2(member_value(value, age), tl3);
+        const TestPerson_Repr_1 tl1(member_value(value, address), tl2);
+        const TestPerson_Repr_0 tl0(member_value(value, name), tl1);
+        return tl0;
+    }
+
+    static Type from(const Repr &repr) {
+        const auto tl0 = repr;
+        const auto tl1 = tl0.tail;
+        const auto tl2 = tl1.tail;
+        const auto tl3 = tl2.tail;
+        return TestPerson(tl0.head.value, tl1.head.value, tl2.head.value);
+    }
+};
+
+template<>
+struct ReferenceGeneric<TestPerson>
+{
+    using TestPerson_Repr_3 = HNil;
+    using TestPerson_Repr_2 = HList<int &, TestPerson_Repr_3>;
+    using TestPerson_Repr_1 = HList<SimpleAddress &, TestPerson_Repr_2>;
+    using TestPerson_Repr_0 = HList<const char * &, TestPerson_Repr_1>;
+    using TestPerson_Repr   = TestPerson_Repr_0;
+
+    using Type = TestPerson;
+    using Repr = TestPerson_Repr;
+
+    static Repr to(Type &value) {
+        const TestPerson_Repr_3 tl3{};
+        const TestPerson_Repr_2 tl2(value.age, tl3);
+        const TestPerson_Repr_1 tl1(value.address, tl2);
+        const TestPerson_Repr_0 tl0(value.name, tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct LabelledReferenceGeneric<TestPerson>
+{
+    using TestPerson_Repr_3 = HNil;
+    using TestPerson_Repr_2 = HList<MemberReference<int>, TestPerson_Repr_3>;
+    using TestPerson_Repr_1 = HList<MemberReference<SimpleAddress>, TestPerson_Repr_2>;
+    using TestPerson_Repr_0 = HList<MemberReference<const char *>, TestPerson_Repr_1>;
+    using TestPerson_Repr   = TestPerson_Repr_0;
+
+    using Type = TestPerson;
+    using Repr = TestPerson_Repr;
+    static constexpr const char *name = "TestPerson";
+
+    static Repr to(Type &value) {
+        const TestPerson_Repr_3 tl3{};
+        const TestPerson_Repr_2 tl2(member_reference(value, age), tl3);
+        const TestPerson_Repr_1 tl1(member_reference(value, address), tl2);
+        const TestPerson_Repr_0 tl0(member_reference(value, name), tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct PointerGeneric<TestPerson>
+{
+    using TestPerson_Repr_3 = HNil;
+    using TestPerson_Repr_2 = HList<int *, TestPerson_Repr_3>;
+    using TestPerson_Repr_1 = HList<SimpleAddress *, TestPerson_Repr_2>;
+    using TestPerson_Repr_0 = HList<const char * *, TestPerson_Repr_1>;
+    using TestPerson_Repr   = TestPerson_Repr_0;
+
+    using Type = TestPerson;
+    using Repr = TestPerson_Repr;
+
+    static Repr to(Type &value) {
+        const TestPerson_Repr_3 tl3{};
+        const TestPerson_Repr_2 tl2(&value.age, tl3);
+        const TestPerson_Repr_1 tl1(&value.address, tl2);
+        const TestPerson_Repr_0 tl0(&value.name, tl1);
+        return tl0;
+    }
+};
+
+template<>
+struct LabelledPointerGeneric<TestPerson>
+{
+    using TestPerson_Repr_3 = HNil;
+    using TestPerson_Repr_2 = HList<MemberPointer<int>, TestPerson_Repr_3>;
+    using TestPerson_Repr_1 = HList<MemberPointer<SimpleAddress>, TestPerson_Repr_2>;
+    using TestPerson_Repr_0 = HList<MemberPointer<const char *>, TestPerson_Repr_1>;
+    using TestPerson_Repr   = TestPerson_Repr_0;
+
+    using Type = TestPerson;
+    using Repr = TestPerson_Repr;
+
+    static Repr to(Type &value) {
+        const TestPerson_Repr_3 tl3{};
+        const TestPerson_Repr_2 tl2(member_pointer(value, age), tl3);
+        const TestPerson_Repr_1 tl1(member_pointer(value, address), tl2);
+        const TestPerson_Repr_0 tl0(member_pointer(value, name), tl1);
+        return tl0;
+    }
+};
 
 struct Vec3
 {
