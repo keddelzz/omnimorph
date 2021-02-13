@@ -6,6 +6,8 @@ project(omnimorph C CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME}
+    cpp/FilePosition.cpp
+    cpp/FileRange.cpp
     main.cpp
 )
 
