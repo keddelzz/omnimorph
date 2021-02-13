@@ -9,6 +9,8 @@ add_executable(${PROJECT_NAME}
     cpp/FilePosition.cpp
     cpp/FileRange.cpp
     cpp/Lexeme.cpp
+    cpp/TokenType.cpp
+    cpp/Token.cpp
     main.cpp
 )
 
