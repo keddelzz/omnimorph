@@ -1,23 +1,20 @@
 #pragma once
 
+#include <cstdint>
 #include <ostream>
 
-#include "types.h"
-
-enum class TokenType : u8
+enum class TokenType : uint8_t
 {
     Plus,
     Star,
-    LPar,
-    RPar,
+    Lpar,
+    Rpar,
     Ident,
-    IntLit,
-
+    Intlt,
     White,
     Eof,
-
     Error,
     _TokenCount = Error,
 };
 
-std::ostream &operator<<(std::ostream & stream, TokenType type);
+std::ostream &operator<<(std::ostream &stream, TokenType type);

@@ -1,0 +1,8 @@
+    State advance_0(ScannerDriver::Char c) const;
+    State advance_1(ScannerDriver::Char c) const;
+    State advance_2(ScannerDriver::Char c) const;
+    State advance_3(ScannerDriver::Char c) const;
+    State advance_4(ScannerDriver::Char c) const;
+    State advance_5(ScannerDriver::Char c) const;
+    State advance_6(ScannerDriver::Char c) const;
+    State advance_7(ScannerDriver::Char c) const;

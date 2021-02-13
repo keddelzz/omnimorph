@@ -1,0 +1,141 @@
+
+ScannerDriver::State CppScanner::startState() const
+{
+    return 0;
+}
+
+ScannerDriver::State CppScanner::errorState() const
+{
+    return -1;
+}
+
+bool CppScanner::isErrorState(ScannerDriver::State state) const
+{
+    return state < 0;
+}
+
+bool CppScanner::isAcceptingState(ScannerDriver::State state) const
+{
+    switch (state) {
+        case 1: return true;
+        case 2: return true;
+        case 3: return true;
+        case 4: return true;
+        case 5: return true;
+        case 6: return true;
+        case 7: return true;
+        default: return false;
+    }
+}
+
+TokenType CppScanner::tokenType(ScannerDriver::State state) const
+{
+    switch (state) {
+        case 0: return TokenType::Error;
+        case 1: return TokenType::White;
+        case 2: return TokenType::Lpar;
+        case 3: return TokenType::Rpar;
+        case 4: return TokenType::Star;
+        case 5: return TokenType::Plus;
+        case 6: return TokenType::Intlt;
+        case 7: return TokenType::Ident;
+        default: return TokenType::Error;
+    }
+}
+
+ScannerDriver::State CppScanner::advance_0(ScannerDriver::Char c) const
+{
+    if ('(' == c)
+        return State(2);
+    if (between<Char>('a', c, 'z'))
+        return State(7);
+    if ('\u000D' == c)
+        return State(1);
+    if ('_' == c)
+        return State(7);
+    if (')' == c)
+        return State(3);
+    if (between<Char>('\u0009', c, '\u000A'))
+        return State(1);
+    if ('*' == c)
+        return State(4);
+    if (' ' == c)
+        return State(1);
+    if (between<Char>('A', c, 'Z'))
+        return State(7);
+    if ('+' == c)
+        return State(5);
+    if (between<Char>('0', c, '9'))
+        return State(6);
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::advance_1(ScannerDriver::Char c) const
+{
+    if (between<Char>('\u0009', c, '\u000A'))
+        return State(1);
+    if ('\u000D' == c)
+        return State(1);
+    if (' ' == c)
+        return State(1);
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::advance_2(ScannerDriver::Char c) const
+{
+    (void) c;
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::advance_3(ScannerDriver::Char c) const
+{
+    (void) c;
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::advance_4(ScannerDriver::Char c) const
+{
+    (void) c;
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::advance_5(ScannerDriver::Char c) const
+{
+    (void) c;
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::advance_6(ScannerDriver::Char c) const
+{
+    if (between<Char>('0', c, '9'))
+        return State(6);
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::advance_7(ScannerDriver::Char c) const
+{
+    if ('_' == c)
+        return State(7);
+    if (between<Char>('0', c, '9'))
+        return State(7);
+    if (between<Char>('A', c, 'Z'))
+        return State(7);
+    if (between<Char>('a', c, 'z'))
+        return State(7);
+    return errorState();
+}
+
+ScannerDriver::State CppScanner::nextState(ScannerDriver::State state, ScannerDriver::Char c) const
+{
+    switch (state) {
+        case 0: return advance_0(c);
+        case 1: return advance_1(c);
+        case 2: return advance_2(c);
+        case 3: return advance_3(c);
+        case 4: return advance_4(c);
+        case 5: return advance_5(c);
+        case 6: return advance_6(c);
+        case 7: return advance_7(c);
+        default: return advance_0(c);
+    }
+}
