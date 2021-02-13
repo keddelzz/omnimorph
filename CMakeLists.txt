@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
     cpp/TokenType.cpp
     cpp/Token.cpp
     cpp/ScannerDriver.cpp
+    cpp/SimpleScanner.cpp
     main.cpp
 )
 
