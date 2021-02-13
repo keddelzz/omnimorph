@@ -7,7 +7,7 @@ int main()
 {
     std::cout << "Hello, omnimorph!" << std::endl;
 
-    auto scanner = CppScanner::fromString("1 + 2 * 3");
+    auto scanner = CppScanner::fromFile("../example/arithmetic.txt");
     while (scanner->hasNext()) {
         std::cout << scanner->next() << std::endl;
     }

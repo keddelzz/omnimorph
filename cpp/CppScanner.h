@@ -8,6 +8,7 @@ class CppScanner
 
 public:
     static CppScanner *fromString(std::string string);
+    static CppScanner *fromFile(std::string filePath);
 
 protected:
     State startState() const final;
