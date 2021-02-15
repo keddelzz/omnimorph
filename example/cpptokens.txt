@@ -1,0 +1,19 @@
++asm
+- new
+% delete *
+/ int int3 ifelse
+
+< 3.1415e-3 ) {{)
+077
+088
+}
+
+'a'
+'\0'
+'\777'
+'\uF00D'
+"Hello, World!"
+"a"
+"\0"
+"\777"
+"\uF00D"
