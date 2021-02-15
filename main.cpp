@@ -7,7 +7,7 @@ int main()
 {
     std::cout << "Hello, omnimorph!" << std::endl;
 
-    auto scanner = cpp::CppScanner::fromFile("../example/cpptokens.txt");
+    auto scanner = cpp::CppScanner::fromFile("../example/Vec3f.h");
     while (scanner->hasNext()) {
         std::cout << scanner->next() << std::endl;
     }
