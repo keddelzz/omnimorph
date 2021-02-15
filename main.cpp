@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "cpp/FileUtils.h"
-#include "cpp/CppScanner.h"
+#include "cpp/CppParser.h"
 
 int main()
 {
@@ -10,11 +10,10 @@ int main()
 
     const std::string filePath("../example/Vec3f.h");
     const auto fileContents = cpp::FileUtils::readEntireFile(filePath);
-    cpp::CppScanner scanner;
-    scanner.initialize(filePath, fileContents);
-    while (scanner.hasNext()) {
-        std::cout << scanner.next() << std::endl;
-    }
+    cpp::CppParser parser;
+    parser.initialize(filePath, fileContents);
+    parser.foreachTypeDefinition([](auto) {
+    });
 
     return EXIT_SUCCESS;
 }
