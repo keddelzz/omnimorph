@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME}
     cpp/Lexeme.cpp
     cpp/TokenType.cpp
     cpp/Token.cpp
+    cpp/FileUtils.cpp
     cpp/ScannerDriver.cpp
     cpp/CppScanner.cpp
     main.cpp
