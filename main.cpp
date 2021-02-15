@@ -10,7 +10,8 @@ int main()
 
     const std::string filePath("../example/Vec3f.h");
     const auto fileContents = cpp::FileUtils::readEntireFile(filePath);
-    cpp::CppScanner scanner(filePath, fileContents);
+    cpp::CppScanner scanner;
+    scanner.initialize(filePath, fileContents);
     while (scanner.hasNext()) {
         std::cout << scanner.next() << std::endl;
     }

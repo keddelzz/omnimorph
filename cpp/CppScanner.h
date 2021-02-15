@@ -9,11 +9,9 @@ class CppScanner
 {
 
 public:
-    explicit CppScanner(
-        std::string fileName,
-        std::vector<u8> fileContents
-    );
-    explicit CppScanner(std::vector<u8> fileContents);
+    explicit CppScanner() = default;
+    void initialize(std::string fileName, std::vector<u8> fileContents) final;
+    void initialize(std::vector<u8> fileContents) final;
 
 protected:
     State startState() const final;

@@ -5,14 +5,19 @@
 
 namespace cpp {
 
-ScannerDriver::ScannerDriver(
-    std::string fileName,
-    std::vector<u8> fileContents)
-    : m_fileName(std::move(fileName))
-    , m_fileContents(std::move(fileContents))
+void ScannerDriver::initialize(std::string fileName, std::vector<u8> fileContents)
 {
-    if (not m_fileContents.empty())
+    m_fileName = std::move(fileName);
+    m_fileContents = std::move(fileContents);
+
+    if (not m_fileContents.empty()) {
         m_currentOffset = 0;
+    }
+}
+
+void ScannerDriver::initialize(std::vector<u8> fileContents)
+{
+    initialize("<string>", std::move(fileContents));
 }
 
 bool ScannerDriver::hasNext()
