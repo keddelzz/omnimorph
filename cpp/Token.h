@@ -2,7 +2,7 @@
 
 #include <ostream>
 
-#include "types.h"
+#include "../types.h"
 #include "TokenType.h"
 #include "Lexeme.h"
 #include "FileRange.h"
