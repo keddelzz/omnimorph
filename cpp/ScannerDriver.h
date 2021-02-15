@@ -5,6 +5,8 @@
 
 #include "Token.h"
 
+namespace cpp {
+
 class ScannerDriver
 {
 
@@ -65,3 +67,5 @@ private:
     FilePosition m_endAccepting;       // line:column in file
 
 };
+
+}

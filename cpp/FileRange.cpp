@@ -1,5 +1,7 @@
 #include "FileRange.h"
 
+namespace cpp {
+
 FileRange::FileRange(
     std::string fileName,
     const FilePosition &start,
@@ -22,4 +24,6 @@ std::ostream &operator<<(std::ostream &stream, const FileRange &range)
         << range.fileName << ':'
         << range.start << '-'
         << range.end;
+}
+
 }

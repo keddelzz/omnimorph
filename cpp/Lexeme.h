@@ -4,6 +4,8 @@
 
 #include "types.h"
 
+namespace cpp {
+
 struct Lexeme
 {
     explicit Lexeme();
@@ -16,3 +18,5 @@ struct Lexeme
 };
 
 std::ostream &operator<<(std::ostream &, const Lexeme &lexeme);
+
+}

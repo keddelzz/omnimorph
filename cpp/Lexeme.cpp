@@ -1,5 +1,7 @@
 #include "Lexeme.h"
 
+namespace cpp {
+
 Lexeme::Lexeme()
     : Lexeme(nullptr, nullptr)
 {}
@@ -23,4 +25,6 @@ std::ostream &operator<<(std::ostream &stream, const Lexeme &lexeme)
     string.resize(lexemeLength);
     memcpy(string.data(), lexeme.start, lexemeLength);
     return stream << string;
+}
+
 }

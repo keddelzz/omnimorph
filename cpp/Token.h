@@ -7,6 +7,8 @@
 #include "Lexeme.h"
 #include "FileRange.h"
 
+namespace cpp {
+
 struct Token
 {
     explicit Token() = default;
@@ -20,3 +22,5 @@ struct Token
 };
 
 std::ostream &operator<<(std::ostream &stream, const Token &token);
+
+}

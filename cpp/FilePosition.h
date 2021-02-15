@@ -4,6 +4,8 @@
 
 #include "types.h"
 
+namespace cpp {
+
 struct FilePosition
 {
     explicit FilePosition() = default;
@@ -16,3 +18,5 @@ struct FilePosition
 };
 
 std::ostream &operator<<(std::ostream &stream, const FilePosition &position);
+
+}

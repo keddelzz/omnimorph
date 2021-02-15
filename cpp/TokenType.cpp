@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+namespace cpp {
+
 std::ostream &operator<<(std::ostream &stream, TokenType type)
 {
     switch (type) {
@@ -140,4 +142,6 @@ std::ostream &operator<<(std::ostream &stream, TokenType type)
         default: assert(false);
     }
     return stream;
+}
+
 }

@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 
+namespace cpp {
+
 CppScanner::CppScanner(
     std::string fileName,
     std::vector<u8> fileContents)
@@ -33,3 +35,5 @@ CppScanner *CppScanner::fromFile(std::string filePath)
 }
 
 #include "CppScanner.cpp.fsm"
+
+}

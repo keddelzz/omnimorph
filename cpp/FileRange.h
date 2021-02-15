@@ -4,6 +4,8 @@
 #include "types.h"
 #include "FilePosition.h"
 
+namespace cpp {
+
 struct FileRange
 {
     explicit FileRange() = default;
@@ -21,3 +23,5 @@ struct FileRange
 };
 
 std::ostream &operator<<(std::ostream &stream, const FileRange &range);
+
+}

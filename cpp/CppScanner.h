@@ -2,6 +2,8 @@
 
 #include "ScannerDriver.h"
 
+namespace cpp {
+
 class CppScanner
     : public ScannerDriver
 {
@@ -27,3 +29,5 @@ private:
 #include "CppScanner.h.fsm"
 
 };
+
+}

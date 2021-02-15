@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cstring>
 
+namespace cpp {
+
 ScannerDriver::ScannerDriver(
     std::string fileName,
     std::vector<u8> fileContents)
@@ -130,4 +132,6 @@ Token ScannerDriver::scanNextToken()
         }
         return Token();
     }
+}
+
 }

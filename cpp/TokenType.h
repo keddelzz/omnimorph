@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <ostream>
 
+namespace cpp {
+
 enum class TokenType : int16_t
 {
     Error = -1,
@@ -140,3 +142,5 @@ enum class TokenType : int16_t
 };
 
 std::ostream &operator<<(std::ostream &stream, TokenType type);
+
+}

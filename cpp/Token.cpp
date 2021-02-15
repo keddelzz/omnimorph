@@ -1,5 +1,7 @@
 #include "Token.h"
 
+namespace cpp {
+
 Token::Token(
     TokenType type,
     const Lexeme &lexeme,
@@ -24,4 +26,6 @@ std::ostream &operator<<(std::ostream &stream, const Token &token)
         << token.lexeme << ", "
         << token.range
         << ")";
+}
+
 }
