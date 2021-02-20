@@ -4,14 +4,9 @@
 
 namespace cpp {
 
-void CppScanner::initialize(std::string fileName, std::vector<u8> fileContents)
+void CppScanner::initialize(const String &fileName, const String &fileContents)
 {
     ScannerDriver::initialize(fileName, fileContents);
-}
-
-void CppScanner::initialize(std::vector<u8> fileContents)
-{
-    ScannerDriver::initialize(fileContents);
 }
 
 #include "CppScanner.cpp.fsm"

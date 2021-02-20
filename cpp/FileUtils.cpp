@@ -1,22 +1,25 @@
 #include "FileUtils.h"
 
 #include <fstream>
+#include <cstring>
 
 namespace cpp {
 
-std::vector<u8> FileUtils::readEntireFile(const std::string &filePath)
+String FileUtils::readEntireFile(const String &filePath)
 {
-    std::ifstream stream(filePath);
+    std::string stdFilePath(filePath.length, '\0');
+    memcpy(stdFilePath.data(), filePath.data, filePath.length);
+
+    std::ifstream stream(stdFilePath);
     stream.seekg(0, std::ios::end);
-    size_t size = stream.tellg();
+    const auto size = u64(stream.tellg());
 
-    std::string buffer(size, ' ');
+    String result(size);
     stream.seekg(0);
-    stream.read(&buffer[0], size);
+    stream.read(reinterpret_cast<char *>(result.data), size);
+    result.length = strlen(reinterpret_cast<const char *>(result.data));
 
-    std::vector<u8> fileContents(buffer.size());
-    memcpy(fileContents.data(), buffer.data(), buffer.size());
-    return std::move(fileContents);
+    return result;
 }
 
 }

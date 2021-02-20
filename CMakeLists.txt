@@ -6,6 +6,7 @@ project(omnimorph C CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME}
+    data/String.cpp
     cpp/FilePosition.cpp
     cpp/FileRange.cpp
     cpp/Lexeme.cpp

@@ -2,10 +2,11 @@
 
 namespace cpp {
 
-void CppParser::initialize(std::string filePath, std::vector<u8> fileContents)
+void CppParser::initialize(const String &filePath, const String &fileContents)
 {
     this->filePath = filePath;
-    scanner.initialize(std::move(filePath), std::move(fileContents));
+    scanner.initialize(filePath, fileContents);
+}
 }
 
 void CppParser::foreachTypeDefinition(Consumer<int> consumer)

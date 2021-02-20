@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ScannerDriver.h"
+#include "../data/String.h"
 
 namespace cpp {
 
@@ -10,8 +11,7 @@ class CppScanner
 
 public:
     explicit CppScanner() = default;
-    void initialize(std::string fileName, std::vector<u8> fileContents) final;
-    void initialize(std::vector<u8> fileContents) final;
+    void initialize(const String &fileName, const String &fileContents) final;
 
 protected:
     State startState() const final;

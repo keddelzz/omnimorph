@@ -8,7 +8,7 @@ int main()
 {
     std::cout << "Hello, omnimorph!" << std::endl;
 
-    const std::string filePath("../example/Vec3f.h");
+    const String filePath("../example/Vec3f.h");
     const auto fileContents = cpp::FileUtils::readEntireFile(filePath);
     cpp::CppParser parser;
     parser.initialize(filePath, fileContents);

@@ -1,14 +1,14 @@
 #include <vector>
 #include <string>
 
-#include "../types.h"
+#include "../data/String.h"
 
 namespace cpp {
 
 class FileUtils
 {
 public:
-    static std::vector<u8> readEntireFile(const std::string& filePath);
+    static String readEntireFile(const String &filePath);
 
 private:
     FileUtils() {}

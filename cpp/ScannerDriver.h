@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Token.h"
+#include "../data/String.h"
 
 namespace cpp {
 
@@ -17,8 +18,7 @@ public:
 
 protected:
     explicit ScannerDriver() = default;
-    virtual void initialize(std::string fileName, std::vector<u8> fileContents);
-    virtual void initialize(std::vector<u8> fileContents);
+    virtual void initialize(const String &fileName, const String &fileContents);
 
     using Char = s32;
 
@@ -45,8 +45,8 @@ private:
     Token scanNextToken();
 
 private:
-    std::string     m_fileName;
-    std::vector<u8> m_fileContents;
+    String m_fileName;
+    String m_fileContents;
 
     bool  m_scanError { false };
     bool  m_eofReturned { false };

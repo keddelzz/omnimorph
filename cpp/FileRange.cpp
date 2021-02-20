@@ -3,10 +3,10 @@
 namespace cpp {
 
 FileRange::FileRange(
-    std::string fileName,
+    const String &fileName,
     const FilePosition &start,
     const FilePosition &end)
-    : fileName(std::move(fileName))
+    : fileName(fileName)
     , start(start)
     , end(end)
 {}
