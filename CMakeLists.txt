@@ -15,6 +15,7 @@ add_executable(${PROJECT_NAME}
     cpp/FileUtils.cpp
     cpp/ScannerDriver.cpp
     cpp/CppScanner.cpp
+    cpp/Lookahead.cpp
     cpp/CppParser.cpp
     main.cpp
 )
