@@ -22,7 +22,8 @@ std::ostream &operator<<(std::ostream &stream, const FileRange &range)
 {
     return stream
         << range.fileName << ':'
-        << range.start << '-'
+        << range.start << ", "
+        << range.fileName << ':'
         << range.end;
 }
 
