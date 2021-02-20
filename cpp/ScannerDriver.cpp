@@ -5,6 +5,12 @@
 
 namespace cpp {
 
+ScannerDriver::ScannerDriver()
+{}
+
+ScannerDriver::~ScannerDriver()
+{}
+
 void ScannerDriver::initialize(const String &fileName, const String &fileContents)
 {
     m_fileName = fileName;

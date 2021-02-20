@@ -11,6 +11,7 @@ class CppScanner
 
 public:
     explicit CppScanner() = default;
+    ~CppScanner() = default;
     void initialize(const String &fileName, const String &fileContents) final;
 
 protected:

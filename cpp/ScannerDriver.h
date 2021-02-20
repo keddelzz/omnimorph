@@ -12,12 +12,12 @@ class ScannerDriver
 {
 
 public:
-    virtual ~ScannerDriver() = default;
+    virtual ~ScannerDriver();
     bool hasNext();
     Token next();
 
 protected:
-    explicit ScannerDriver() = default;
+    explicit ScannerDriver();
     virtual void initialize(const String &fileName, const String &fileContents);
 
     using Char = s32;
@@ -45,8 +45,12 @@ private:
     Token scanNextToken();
 
 private:
-    String m_fileName;
-    String m_fileContents;
+    union {;
+        String m_fileName;
+    };
+    union {
+        String m_fileContents;
+    };
 
     bool  m_scanError { false };
     bool  m_eofReturned { false };
