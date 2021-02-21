@@ -39,8 +39,8 @@ public:
         auto c = count;
         while (true) {
             --c;
-            dequeue();
-            if (c == 0) return peek();
+            const auto last = dequeue();
+            if (c == 0) return last;
         }
     }
 
