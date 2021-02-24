@@ -30,14 +30,26 @@ void CppParser::initialize(const String &filePath, const String &fileContents)
     scanner.underlying().initialize(filePath, fileContents);
 }
 
-void CppParser::foreachTypeDefinition(Consumer<TypeDecl *>)
+void CppParser::foreachToplevelDeclaration(std::function<IterationDecision(Decl *)> consumer)
 {
     const auto isDone = [this]() {
         return scanner.peek().type == TokenType::Eof or
                scanner.peek().type == TokenType::Error;
     };
 
-    auto decl = parseTypeDecl();
+    List<Decl *> toplevelDecl;
+    if (not parseDecls(toplevelDecl)) {
+        return;
+    }
+    for (auto i = 0; i < toplevelDecl.length; ++i) {
+        auto decl = toplevelDecl[i];
+
+        switch (consumer(decl)) {
+            case IterationDecision::Continue: continue;
+            case IterationDecision::Break: goto end;
+        }
+    }
+    end:
 
     while (not isDone()) {
         std::cout << scanner.drop() << std::endl;
@@ -106,6 +118,8 @@ MemberVisibility CppParser::parseVisibilityBlock()
         requireType(colon, TokenType::Sym_Colon, MemberVisibility::Invalid);
         scanner.drop(); // :
 
+        dropWhile(isWhitespace);
+
         return visibility;
     };
 
@@ -118,14 +132,8 @@ MemberVisibility CppParser::parseVisibilityBlock()
     }
 }
 
-MemberDecl *CppParser::parseCompoundMember(TypeDeclContext &context)
+Decl *CppParser::parseCompoundMember()
 {
-    dropWhile(isWhitespace);
-
-    const auto visibilityBlock = parseVisibilityBlock();
-    if (MemberVisibility::Invalid != visibilityBlock) {
-        context.visibility = visibilityBlock;
-    }
     dropWhile(isWhitespace);
 
     if (not canBeTpt())
@@ -143,10 +151,12 @@ MemberDecl *CppParser::parseCompoundMember(TypeDeclContext &context)
         case TokenType::Sym_Semicolon: {
             scanner.drop();
 
-            auto decl = Ast::allocMemberDecl(MemberDeclKind::Field);
-            auto &field = decl->fieldDecl;
+            dropWhile(isWhitespace);
 
-            field.visibility = context.visibility;
+            auto decl = Ast::allocDecl(DeclKind::Field);
+            decl->visibility = context.peek().visibility;
+
+            auto &field = decl->field;
             field.type = tpt;
             field.name = name;
             return decl;
@@ -176,73 +186,116 @@ MemberDecl *CppParser::parseCompoundMember(TypeDeclContext &context)
     }
 }
 
-bool CppParser::parseCompoundMembers(TypeDeclContext &context, List<MemberDecl *> &members)
+Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
 {
-    const auto parse = [&, this]() { return parseCompoundMember(context); };
-    return parseListUntil(members, parse, isCloseCurly);
-}
-
-TypeDecl *CppParser::parseCompoundTypeDecl(CompoundTypeType compoundTypeType)
-{
-    TypeDeclContext context { .type = compoundTypeType };
+    assert(isCompoundLike(namespaceType));
 
     scanner.drop(); // struct, class, union
     dropWhile(isWhitespace);
 
-    const auto typeDeclKind = CompoundTypeType::Union == context.type
-        ? TypeDeclKind::UnionType
-        : TypeDeclKind::CompoundType;
-    auto result = Ast::allocTypeDecl(typeDeclKind); // @Leak
+    auto name = scanner.drop();
+    requireType(name, TokenType::Ident, nullptr);
+    dropWhile(isWhitespace);
 
-    if (TypeDeclKind::CompoundType == typeDeclKind) {
-        const auto isClass = CompoundTypeType::Class == context.type;
-        result->compoundType.isClass = isClass;
-        context.visibility = isClass
-            ? MemberVisibility::Private
-            : MemberVisibility::Public;
+    auto kind = DeclKind::Invalid;
+    bool isClass = false;
+    {
+        NamespaceElement element;
+
+        if (isCompound(namespaceType)) {
+            isClass = NamespaceType::Class == namespaceType;
+            element.visibility = isClass
+                ? MemberVisibility::Private
+                : MemberVisibility::Public;
+            kind = DeclKind::CompoundType;
+        } else {
+            element.visibility = MemberVisibility::Public;
+            kind = DeclKind::UnionType;
+        }
+        element.namespaceType = namespaceType;
+        element.elementName = name;
+
+        context.push(element);
     }
 
-    result->name = scanner.drop();
-    requireType(result->name, TokenType::Ident, nullptr);
-    dropWhile(isWhitespace);
+    auto decl = Ast::allocDecl(kind); // @Leak
+    if (isCompound(namespaceType)) {
+        decl->compoundType.isClass = isClass;
+    }
+    decl->name = name;
 
     requireType(scanner.peek(), TokenType::Sym_OpenCurly, nullptr);
     scanner.drop(); // {
     dropWhile(isWhitespace);
 
-    auto &members = CompoundTypeType::Union == context.type
-        ? result->unionType.members
-        : result->compoundType.members;
-    if (not parseCompoundMembers(context, members))
+    auto &members = NamespaceType::Union == namespaceType
+        ? decl->unionType.members
+        : decl->compoundType.members;
+    if (not parseDecls(members))
         return nullptr;
 
     dropWhile(isWhitespace);
+
     requireType(scanner.peek(), TokenType::Sym_CloseCurly, nullptr);
     scanner.drop(); // }
-
     dropWhile(isWhitespace);
+
     requireType(scanner.peek(), TokenType::Sym_Semicolon, nullptr);
     scanner.drop(); // ;
     dropWhile(isWhitespace);
 
-    return result;
+    return decl;
 }
 
-TypeDecl *CppParser::parseEnumTypeDecl()
-{
-    assert(false && "Unimplemented");
-    return nullptr;
-}
-
-TypeDecl *CppParser::parseTypeDecl()
+bool CppParser::canBeDecl()
 {
     switch (scanner.peek().type) {
-        case TokenType::Kw_class : return parseCompoundTypeDecl(CompoundTypeType::Class);
-        case TokenType::Kw_struct: return parseCompoundTypeDecl(CompoundTypeType::Struct);
-        case TokenType::Kw_union : return parseCompoundTypeDecl(CompoundTypeType::Union);
-        case TokenType::Kw_enum  : return parseEnumTypeDecl();
-        default                  : return nullptr;
+        case TokenType::Kw_class : return true;
+        case TokenType::Kw_struct: return true;
+        case TokenType::Kw_union : return true;
+        case TokenType::Kw_enum  : return true;
+        default                  : return canBeTpt();
     }
+}
+
+Decl *CppParser::parseDecl()
+{
+    switch (scanner.peek().type) {
+        case TokenType::Kw_class : return parseCompoundTypeDecl(NamespaceType::Class);
+        case TokenType::Kw_struct: return parseCompoundTypeDecl(NamespaceType::Struct);
+        case TokenType::Kw_union : return parseCompoundTypeDecl(NamespaceType::Union);
+        case TokenType::Kw_enum  : assert(false && "Unimplemented"); return nullptr;
+        default                  :
+            if (canBeTpt()) return parseCompoundMember();
+            return nullptr;
+    }
+}
+
+bool CppParser::parseDecls(List<Decl *> &members)
+{
+    while (true) {
+        const auto &token = scanner.peek();
+        if (TokenType::Eof == token.type) break;
+        if (TokenType::Error == token.type) break;
+
+        auto visibility = MemberVisibility::Invalid;
+        do {
+            visibility = parseVisibilityBlock();
+            if (MemberVisibility::Invalid != visibility) {
+                auto &elem = context.peek();
+                elem.visibility = visibility;
+            }
+        } while (MemberVisibility::Invalid != visibility);
+
+        if (not canBeDecl()) break;
+
+        auto t = parseDecl();
+        if (t == nullptr) break;
+
+        members.append(t);
+    }
+
+    return true;
 }
 
 }

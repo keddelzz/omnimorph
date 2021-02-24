@@ -19,8 +19,7 @@ add_executable(${PROJECT_NAME}
     cpp/Lookahead.cpp
     cpp/Ast.cpp
     cpp/CppParser.cpp
-    main.cpp
-)
+    main.cpp)
 
 target_compile_features(${PROJECT_NAME}
     PRIVATE cxx_constexpr

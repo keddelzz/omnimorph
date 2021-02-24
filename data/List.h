@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 #include "types.h"
 
 template<typename T>
@@ -54,7 +56,7 @@ struct List
     T   *data { nullptr };
 
 private:
-    bool indexInBounds(u64 index) { return index <= length; }
+    bool indexInBounds(u64 index) const { return index <= length; }
 
     u64 nextPot(u64 value)
     {

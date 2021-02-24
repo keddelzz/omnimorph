@@ -60,71 +60,63 @@ enum class MemberVisibility : u8
     Public,
 };
 
+enum class DeclKind : u8
+{
+    Invalid,
+
+    // types
+    CompoundType,
+    EnumType,
+    UnionType,
+
+    // members
+    Field,
+    Method
+};
+
+struct Decl;
+
+struct CompoundTypeDecl
+{
+    bool isClass; // isClass ? class : struct
+    List<Decl *> members;
+};
+
+struct EnumTypeDecl
+{
+    List<Decl *> members;
+};
+
+struct UnionTypeDecl
+{
+    List<Decl *> members;
+};
+
 struct FieldDecl
 {
-    MemberVisibility visibility { MemberVisibility::Invalid };
     Exp *type { nullptr };
     Token name;
 };
 
 struct MethodDecl
 {
-    MemberVisibility visibility { MemberVisibility::Invalid };
     Exp *returnType { nullptr };
     Token name;
     List<FieldDecl *> parameters;
 };
 
-enum class MemberDeclKind : u8
+struct Decl
 {
-    Invalid,
-    Field,
-    Method
-};
-
-struct MemberDecl
-{
-    MemberDeclKind kind { MemberDeclKind::Invalid };
-
-    union {
-        FieldDecl  fieldDecl;
-        MethodDecl methodDecl;
-    };
-};
-
-enum class TypeDeclKind : u8
-{
-    Invalid,
-    CompoundType,
-    EnumType,
-    UnionType,
-};
-
-struct CompoundTypeDecl
-{
-    bool isClass; // isClass ? class : struct
-    List<MemberDecl *> members;
-};
-
-struct EnumTypeDecl
-{
-    List<MemberDecl *> members;
-};
-
-struct UnionTypeDecl
-{
-    List<MemberDecl *> members;
-};
-
-struct TypeDecl
-{
-    TypeDeclKind kind { TypeDeclKind::Invalid };
+    DeclKind kind { DeclKind::Invalid };
+    MemberVisibility visibility;
     Token name;
 
     union {
         CompoundTypeDecl compoundType;
         EnumTypeDecl     enumType;
         UnionTypeDecl    unionType;
+        FieldDecl        field;
+        MethodDecl       method;
     };
 };
 
@@ -132,8 +124,7 @@ class Ast
 {
 public:
     constexpr static Exp *allocExp(ExpKind kind, u64 count = 1) { return tag(alloc<Exp>(count), count, kind); }
-    constexpr static MemberDecl *allocMemberDecl(MemberDeclKind kind, u64 count = 1) { return tag(alloc<MemberDecl>(count), count, kind); }
-    constexpr static TypeDecl *allocTypeDecl(TypeDeclKind kind, u64 count = 1) { return tag(alloc<TypeDecl>(count), count, kind); }
+    constexpr static Decl *allocDecl(DeclKind kind, u64 count = 1) { return tag(alloc<Decl>(count), count, kind); }
     template<typename T>
     constexpr static void freeAst(T *ast) { free(ast); }
 

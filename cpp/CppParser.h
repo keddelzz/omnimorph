@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../data/types.h"
+#include "../data/IterationDecision.h"
 #include "../data/List.h"
 
 #include "CppScanner.h"
@@ -17,7 +18,7 @@ public:
     ~CppParser();
     void initialize(const String &filePath, const String &fileContents);
 
-    void foreachTypeDefinition(Consumer<TypeDecl *> consumer);
+    void foreachToplevelDeclaration(std::function<IterationDecision(Decl *)> consumer);
 
 private:
     union {;
@@ -72,24 +73,85 @@ private:
         return true;
     }
 
+    MemberVisibility parseVisibilityBlock();
+    enum class NamespaceType : u8
+    {
+        Invalid,
+        Namespace,
+        Class,
+        Struct,
+        Union
+    };
+    static bool isCompoundLike(NamespaceType type)
+    {
+        switch (type) {
+            case NamespaceType::Class : return true;
+            case NamespaceType::Struct: return true;
+            case NamespaceType::Union : return true;
+            default                   : return false;
+        }
+    }
+    static bool isCompound(NamespaceType type)
+    {
+        switch (type) {
+            case NamespaceType::Class : return true;
+            case NamespaceType::Struct: return true;
+            default                   : return false;
+        }
+    }
+    struct NamespaceElement
+    {
+        MemberVisibility visibility { MemberVisibility::Invalid };
+        NamespaceType namespaceType { NamespaceType::Invalid };
+        Token elementName;
+    };
+    struct ParseContext
+    {
+        explicit ParseContext()
+        {
+            NamespaceElement element;
+            element.visibility = MemberVisibility::Public;
+            element.namespaceType = NamespaceType::Namespace;
+            element.elementName = Token(); // mark as top level
+            stack.append(element);
+        }
+
+        void push(const NamespaceElement &element)
+        {
+            stack.append(element);
+        }
+
+        const NamespaceElement &peek() const
+        {
+            return stack[stack.length - 1];
+        }
+        NamespaceElement &peek()
+        {
+            return stack[stack.length - 1];
+        }
+
+        NamespaceElement pop()
+        {
+            const auto elem = peek();
+            --stack.length;
+            return elem;
+        }
+
+        List<NamespaceElement> stack;
+    };
+
+    ParseContext context;
+
     bool canBeTpt() { return canBeExp(); }
     Exp *parseTpt() { return parseExp(); }
     bool canBeExp();
     Exp *parseExp();
 
-    MemberVisibility parseVisibilityBlock();
-    enum class CompoundTypeType : u8
-    { Class, Struct, Union };
-    struct TypeDeclContext
-    {
-        CompoundTypeType type;
-        MemberVisibility visibility { MemberVisibility::Invalid };
-    };
-    MemberDecl *parseCompoundMember(TypeDeclContext &context);
-    bool parseCompoundMembers(TypeDeclContext &context, List<MemberDecl *> &members);
-    TypeDecl *parseEnumTypeDecl();
-    TypeDecl *parseCompoundTypeDecl(CompoundTypeType context);
-    TypeDecl *parseTypeDecl();
+    bool canBeDecl();
+    Decl *parseCompoundMember();
+    Decl *parseCompoundTypeDecl(NamespaceType namespaceType);
+    Decl *parseDecl();
+    bool parseDecls(List<Decl *> &members);
 
 };
 
