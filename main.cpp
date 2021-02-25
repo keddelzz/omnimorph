@@ -19,11 +19,10 @@ int main()
     parser.initialize(filePath, fileContents);
     parser.foreachToplevelDeclaration([](Decl *decl) {
         StringBuilder buffer;
+        Ast::showStructure(buffer, decl);
         std::cout << buffer.toString() << std::endl;
         return IterationDecision::Continue;
     });
-
-    // @TODO: Pretty printer
 
     return EXIT_SUCCESS;
 }

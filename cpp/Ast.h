@@ -5,6 +5,8 @@
 
 #include "../data/types.h"
 #include "../data/List.h"
+#include "../data/StringBuilder.h"
+
 #include "Token.h"
 
 namespace cpp {
@@ -47,8 +49,8 @@ struct Exp
     ExpKind kind { ExpKind::Invalid };
 
     union {
-        NameExp      nameExp;
-        PrimitiveExp primitiveExp;
+        NameExp      nameExp;      // @TODO: Simplify names
+        PrimitiveExp primitiveExp; // @TODO: Simplify names
     };
 };
 
@@ -120,7 +122,22 @@ public:
     template<typename T>
     constexpr static void freeAst(T *ast) { free(ast); }
 
+    static void showStructure(StringBuilder &buffer, Exp *exp, int level = 0);
+    static void showStructure(StringBuilder &buffer, Decl *decl, int level = 0);
+
 private:
+    static void makeIndentation(StringBuilder &buffer, int level);
+
+    static void showStructure(StringBuilder &buffer, Visibility visibility);
+    static void showStructure(StringBuilder &buffer, TypeKind kind);
+
+    static void showStructure(StringBuilder &buffer, Exp *decl, PrimitiveExp &primitive, int level);
+    static void showStructure(StringBuilder &buffer, Exp *decl, NameExp &name, int level);
+
+    static void showStructure(StringBuilder &buffer, Decl *decl, TypeDecl &type, int level);
+    static void showStructure(StringBuilder &buffer, Decl *decl, FieldDecl &field, int level);
+    static void showStructure(StringBuilder &buffer, Decl *decl, MethodDecl &method, int level);
+
     template<typename T>
     constexpr static T *alloc(u64 count)
     {
