@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME}
     data/String.cpp
+    data/StringBuilder.cpp
     data/List.cpp
     data/Utils.cpp
     cpp/FilePosition.cpp

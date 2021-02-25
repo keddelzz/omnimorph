@@ -18,7 +18,8 @@ int main()
     CppParser parser;
     parser.initialize(filePath, fileContents);
     parser.foreachToplevelDeclaration([](Decl *decl) {
-
+        StringBuilder buffer;
+        std::cout << buffer.toString() << std::endl;
         return IterationDecision::Continue;
     });
 
