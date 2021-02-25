@@ -1,5 +1,7 @@
 #include "CppParser.h"
 
+#include "../data/ScopeGuard.h"
+
 #include <iostream>
 
 namespace cpp {
@@ -197,6 +199,10 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
     requireType(name, TokenType::Ident, nullptr);
     dropWhile(isWhitespace);
 
+    auto decl = Ast::allocDecl(DeclKind::Type); // @Leak
+    decl->visibility = context.peek().visibility;
+    decl->name = name;
+
     {
         NamespaceElement element;
         if (isCompound(namespaceType)) {
@@ -211,10 +217,7 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
 
         context.push(element);
     }
-
-    auto decl = Ast::allocDecl(DeclKind::Type); // @Leak
-    decl->visibility = context.peek().visibility;
-    decl->name = name;
+    ScopeGuard popContext = [this]() { context.pop(); };
 
     auto &type = decl->type;
     switch (namespaceType) {
