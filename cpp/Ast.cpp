@@ -13,20 +13,20 @@ void Ast::makeIndentation(StringBuilder &buffer, int level)
 void Ast::showStructure(StringBuilder &buffer, Visibility visibility)
 {
     switch (visibility) {
-        case Visibility::Invalid  : buffer.append("Invalid"); break;
-        case Visibility::Private  : buffer.append("Private"); break;
-        case Visibility::Protected: buffer.append("Protected"); break;
-        case Visibility::Public   : buffer.append("Public"); break;
+        case Visibility::Invalid  : buffer.append("INVALID"); break;
+        case Visibility::Private  : buffer.append("private"); break;
+        case Visibility::Protected: buffer.append("protected"); break;
+        case Visibility::Public   : buffer.append("public"); break;
     }
 }
 
 void Ast::showStructure(StringBuilder &buffer, TypeKind kind) {
     switch (kind) {
-        case TypeKind::Invalid: buffer.append("Invalid"); break;
-        case TypeKind::Class  : buffer.append("Class"); break;
-        case TypeKind::Struct : buffer.append("Struct"); break;
-        case TypeKind::Enum   : buffer.append("Enum"); break;
-        case TypeKind::Union  : buffer.append("Union"); break;
+        case TypeKind::Invalid: buffer.append("INVALID"); break;
+        case TypeKind::Class  : buffer.append("class"); break;
+        case TypeKind::Struct : buffer.append("struct"); break;
+        case TypeKind::Enum   : buffer.append("enum"); break;
+        case TypeKind::Union  : buffer.append("union"); break;
     }
 }
 
@@ -56,7 +56,7 @@ void Ast::showStructure(StringBuilder &buffer, Exp *exp, int level)
     switch (exp->kind) {
         case ExpKind::Primitive: Ast::showStructure(buffer, exp, exp->primitive, level); break;
         case ExpKind::Name     : Ast::showStructure(buffer, exp, exp->name, level); break;
-        default                : buffer.append("Exp(Invalid)"); break;
+        default                : buffer.append("Exp(INVALID)"); break;
     }
 }
 
@@ -115,7 +115,7 @@ void Ast::showStructure(StringBuilder &buffer, Decl *decl, int level)
         case DeclKind::Type   : Ast::showStructure(buffer, decl, decl->type, level); break;
         case DeclKind::Field  : Ast::showStructure(buffer, decl, decl->field, level); break;
         case DeclKind::Method : Ast::showStructure(buffer, decl, decl->method, level); break;
-        default               : buffer.append("Decl(Invalid)"); break;
+        default               : buffer.append("Decl(INVALID)"); break;
     }
 }
 
