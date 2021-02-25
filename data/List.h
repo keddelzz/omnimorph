@@ -26,6 +26,8 @@ struct List
         }
     }
 
+    constexpr bool empty() const { return length == 0; }
+
     constexpr const T &operator[](u64 index) const
     {
         assert(indexInBounds(index));
