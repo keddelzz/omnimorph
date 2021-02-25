@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "types.h"
+#include "Utils.h"
 
 template<typename T>
 struct List
@@ -58,22 +59,9 @@ struct List
 private:
     bool indexInBounds(u64 index) const { return index <= length; }
 
-    u64 nextPot(u64 value)
-    {
-        --value;
-        value |= value >> (1 << 0);
-        value |= value >> (1 << 1);
-        value |= value >> (1 << 2);
-        value |= value >> (1 << 3);
-        value |= value >> (1 << 4);
-        value |= value >> (1 << 5);
-        ++value;
-        return value;
-    }
-
     void ensureCapacity(u64 newCapacity)
     {
-        newCapacity = nextPot(newCapacity);
+        newCapacity = Utils::nextPot(newCapacity);
         if (newCapacity > capacity) {
             void *newData = nullptr;
             if (data == nullptr) {
