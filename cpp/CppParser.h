@@ -45,6 +45,18 @@ private:
     }
 
     constexpr static inline bool isWhitespace(const Token &token) { return TokenType::White == token.type; }
+    static inline bool isWhitespaceContainingLinebreak(const Token &token)
+    {
+        if (TokenType::White != token.type) return false;
+
+        const auto lexeme = token.lexeme.toString();
+        for (auto i = 0; i < lexeme.length; ++i) {
+            if (lexeme[i] == '\n') return true;
+        }
+
+        return false;
+    };
+
     constexpr static inline bool isSemicolon(const Token &token) { return TokenType::Sym_Semicolon == token.type; }
     constexpr static inline bool noSemicolon(const Token &token) { return TokenType::Sym_Semicolon != token.type; }
     constexpr static inline bool isCloseCurly(const Token &token) { return TokenType::Sym_Semicolon == token.type; }
@@ -79,6 +91,8 @@ private:
         }
         return true;
     }
+
+    void skipPreprocessorStatement();
 
     Visibility parseVisibilityBlock();
     enum class NamespaceType : u8

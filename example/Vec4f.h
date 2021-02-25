@@ -1,3 +1,7 @@
+#include <cstring>
+#include <QCore/QString>
+#include <QCore/QObject.h>
+
 struct Vec4f
 {
     float x = 0;

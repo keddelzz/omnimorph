@@ -111,6 +111,14 @@ Exp *CppParser::parseExp()
     return nullptr;
 }
 
+void CppParser::skipPreprocessorStatement()
+{
+    assert(TokenType::Sym_Hash == scanner.peek().type);
+
+    dropUntil(isWhitespaceContainingLinebreak);
+    scanner.drop(); // <white>
+};
+
 Visibility CppParser::parseVisibilityBlock()
 {
     const auto ok = [this](Visibility visibility) -> Visibility {
@@ -294,6 +302,11 @@ bool CppParser::parseDecls(List<Decl *> &members)
         const auto &token = scanner.peek();
         if (TokenType::Eof == token.type) break;
         if (TokenType::Error == token.type) break;
+
+        while (TokenType::Sym_Hash == scanner.peek().type) {
+            dropWhile(isWhitespace);
+            skipPreprocessorStatement();
+        }
 
         auto visibility = Visibility::Invalid;
         do {
