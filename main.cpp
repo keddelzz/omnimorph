@@ -31,9 +31,9 @@ int main()
             if (DeclKind::Field != member->kind) continue;
 
             switch (member->visibility) {
-                case MemberVisibility::Public: std::cout << "public: "; break;
-                case MemberVisibility::Private: std::cout << "private: "; break;
-                case MemberVisibility::Protected: std::cout << "protected: "; break;
+                case Visibility::Public: std::cout << "public: "; break;
+                case Visibility::Private: std::cout << "private: "; break;
+                case Visibility::Protected: std::cout << "protected: "; break;
             }
             const auto &field = member->field;
             switch (field.type->kind) {

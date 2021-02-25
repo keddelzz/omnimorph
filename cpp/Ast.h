@@ -52,7 +52,7 @@ struct Exp
     };
 };
 
-enum class MemberVisibility : u8
+enum class Visibility : u8
 {
     Invalid,
     Private,
@@ -108,7 +108,7 @@ struct MethodDecl
 struct Decl
 {
     DeclKind kind { DeclKind::Invalid };
-    MemberVisibility visibility;
+    Visibility visibility;
     Token name;
 
     union {

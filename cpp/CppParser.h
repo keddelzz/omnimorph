@@ -73,7 +73,7 @@ private:
         return true;
     }
 
-    MemberVisibility parseVisibilityBlock();
+    Visibility parseVisibilityBlock();
     enum class NamespaceType : u8
     {
         Invalid,
@@ -101,7 +101,7 @@ private:
     }
     struct NamespaceElement
     {
-        MemberVisibility visibility { MemberVisibility::Invalid };
+        Visibility visibility { Visibility::Invalid };
         NamespaceType namespaceType { NamespaceType::Invalid };
         Token elementName;
     };
@@ -110,7 +110,7 @@ private:
         explicit ParseContext()
         {
             NamespaceElement element;
-            element.visibility = MemberVisibility::Public;
+            element.visibility = Visibility::Public;
             element.namespaceType = NamespaceType::Namespace;
             element.elementName = Token(); // mark as top level
             stack.append(element);

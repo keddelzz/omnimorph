@@ -109,13 +109,13 @@ Exp *CppParser::parseExp()
     return nullptr;
 }
 
-MemberVisibility CppParser::parseVisibilityBlock()
+Visibility CppParser::parseVisibilityBlock()
 {
-    const auto ok = [this](MemberVisibility visibility) -> MemberVisibility {
+    const auto ok = [this](Visibility visibility) -> Visibility {
         scanner.drop(); // private, protected, public
 
         const auto &colon = scanner.peek();
-        requireType(colon, TokenType::Sym_Colon, MemberVisibility::Invalid);
+        requireType(colon, TokenType::Sym_Colon, Visibility::Invalid);
         scanner.drop(); // :
 
         dropWhile(isWhitespace);
@@ -124,11 +124,11 @@ MemberVisibility CppParser::parseVisibilityBlock()
     };
 
     switch (scanner.peek().type) {
-        case TokenType::Kw_private  : return ok(MemberVisibility::Private);
-        case TokenType::Kw_protected: return ok(MemberVisibility::Protected);
-        case TokenType::Kw_public   : return ok(MemberVisibility::Public);
+        case TokenType::Kw_private  : return ok(Visibility::Private);
+        case TokenType::Kw_protected: return ok(Visibility::Protected);
+        case TokenType::Kw_public   : return ok(Visibility::Public);
         // @TODO: Support Qt's signals: public/private slots:
-        default                     : return MemberVisibility::Invalid;
+        default                     : return Visibility::Invalid;
     }
 }
 
@@ -205,11 +205,11 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
         if (isCompound(namespaceType)) {
             isClass = NamespaceType::Class == namespaceType;
             element.visibility = isClass
-                ? MemberVisibility::Private
-                : MemberVisibility::Public;
+                ? Visibility::Private
+                : Visibility::Public;
             kind = DeclKind::CompoundType;
         } else {
-            element.visibility = MemberVisibility::Public;
+            element.visibility = Visibility::Public;
             kind = DeclKind::UnionType;
         }
         element.namespaceType = namespaceType;
@@ -278,14 +278,14 @@ bool CppParser::parseDecls(List<Decl *> &members)
         if (TokenType::Eof == token.type) break;
         if (TokenType::Error == token.type) break;
 
-        auto visibility = MemberVisibility::Invalid;
+        auto visibility = Visibility::Invalid;
         do {
             visibility = parseVisibilityBlock();
-            if (MemberVisibility::Invalid != visibility) {
+            if (Visibility::Invalid != visibility) {
                 auto &elem = context.peek();
                 elem.visibility = visibility;
             }
-        } while (MemberVisibility::Invalid != visibility);
+        } while (Visibility::Invalid != visibility);
 
         if (not canBeDecl()) break;
 
