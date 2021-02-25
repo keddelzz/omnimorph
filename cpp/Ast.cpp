@@ -98,7 +98,7 @@ void Ast::showStructure(StringBuilder &buffer, Decl *decl, FieldDecl &field, int
     Ast::showStructure(buffer, field.type, level); buffer.append(",\n");
 
     makeIndentation(buffer, level + 1);
-    buffer.append(field.name.lexeme.toString()); buffer.append("\n");
+    buffer.append(decl->name.lexeme.toString()); buffer.append("\n");
 
     makeIndentation(buffer, level);
     buffer.append(")");

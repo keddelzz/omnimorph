@@ -91,13 +91,11 @@ struct TypeDecl
 struct FieldDecl
 {
     Exp *type { nullptr };
-    Token name;
 };
 
 struct MethodDecl
 {
     Exp *returnType { nullptr };
-    Token name;
     List<FieldDecl *> parameters;
 };
 

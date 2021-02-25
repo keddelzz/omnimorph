@@ -154,11 +154,11 @@ Decl *CppParser::parseCompoundMember()
             dropWhile(isWhitespace);
 
             auto decl = Ast::allocDecl(DeclKind::Field);
+            decl->name = name;
             decl->visibility = context.peek().visibility;
 
             auto &field = decl->field;
             field.type = tpt;
-            field.name = name;
             return decl;
         }
 
