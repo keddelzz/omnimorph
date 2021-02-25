@@ -54,8 +54,8 @@ void Ast::showStructure(StringBuilder &buffer, Exp *decl, NameExp &name, int lev
 void Ast::showStructure(StringBuilder &buffer, Exp *exp, int level)
 {
     switch (exp->kind) {
-        case ExpKind::Primitive: Ast::showStructure(buffer, exp, exp->primitiveExp, level); break;
-        case ExpKind::Name     : Ast::showStructure(buffer, exp, exp->nameExp, level); break;
+        case ExpKind::Primitive: Ast::showStructure(buffer, exp, exp->primitive, level); break;
+        case ExpKind::Name     : Ast::showStructure(buffer, exp, exp->name, level); break;
         default                : buffer.append("Exp(Invalid)"); break;
     }
 }

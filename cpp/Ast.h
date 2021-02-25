@@ -40,8 +40,8 @@ struct PrimitiveExp
 enum class ExpKind : u8
 {
     Invalid,
-    Name,
     Primitive,
+    Name,
 };
 
 struct Exp
@@ -49,8 +49,8 @@ struct Exp
     ExpKind kind { ExpKind::Invalid };
 
     union {
-        NameExp      nameExp;      // @TODO: Simplify names
-        PrimitiveExp primitiveExp; // @TODO: Simplify names
+        PrimitiveExp primitive;
+        NameExp      name;
     };
 };
 

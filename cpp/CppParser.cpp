@@ -96,12 +96,12 @@ Exp *CppParser::parseExp()
     if (isIdent) {
         if (PrimitiveExpKind::Invalid == kind) {
             auto exp = Ast::allocExp(ExpKind::Name);
-            exp->nameExp.name = scanner.drop();
+            exp->name.name = scanner.drop();
             return exp;
         } else {
             scanner.drop();
             auto exp = Ast::allocExp(ExpKind::Primitive);
-            exp->primitiveExp.kind = kind;
+            exp->primitive.kind = kind;
             return exp;
         }
     }
