@@ -4,6 +4,8 @@
 
 struct Vec4f
 {
+    generic(Vec4f)
+
     float x = 0;
 public:
     float y;
@@ -14,4 +16,10 @@ private:
     };
 protected:
     float w;
+};
+
+struct Vec2f
+{
+    int x;
+    int y;
 };

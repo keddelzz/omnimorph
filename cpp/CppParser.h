@@ -61,6 +61,8 @@ private:
     constexpr static inline bool noSemicolon(const Token &token) { return TokenType::Sym_Semicolon != token.type; }
     constexpr static inline bool isCloseCurly(const Token &token) { return TokenType::Sym_Semicolon == token.type; }
 
+    u16 detectTypeMarker(const String &typeName); // Returns tokens to skip, if we see a type marker
+
     template<typename T, typename ParseSingle, typename Predicate>
     inline bool parseListWhile(List<T *> &list, ParseSingle parse, Predicate p)
     {

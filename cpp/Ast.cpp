@@ -62,7 +62,11 @@ void Ast::showStructure(StringBuilder &buffer, Exp *exp, int level)
 
 void Ast::showStructure(StringBuilder &buffer, Decl *decl, TypeDecl &type, int level)
 {
-    buffer.append("TypeDecl(\n");
+    buffer.append("TypeDecl");
+    if (type.marked) {
+        buffer.append('*');
+    }
+    buffer.append("(\n");
 
     makeIndentation(buffer, level + 1);
     Ast::showStructure(buffer, decl->visibility); buffer.append(",\n");

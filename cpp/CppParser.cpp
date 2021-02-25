@@ -111,6 +111,53 @@ Exp *CppParser::parseExp()
     return nullptr;
 }
 
+u16 CppParser::detectTypeMarker(const String &typeName)
+{
+    // generic (T)
+
+    u16 offset = 0;
+    const auto skipWhitespace = [&]() {
+        while (isWhitespace(scanner.peek(offset))) ++offset;
+    };
+
+    {
+        const auto &ident = scanner.peek(offset);
+        if (TokenType::Ident != ident.type)
+            return 0;
+        ++offset;
+        skipWhitespace();
+
+        const String generic("generic");
+        if (generic != ident.lexeme.toString())
+            return 0;
+    }
+
+    const auto &oparen = scanner.peek(offset);
+    if (TokenType::Sym_OpenParen != oparen.type)
+        return 0;
+    ++offset;
+    skipWhitespace();
+
+    {
+        const auto &name = scanner.peek(offset);
+        // @TODO: allow type specializations?
+        if (TokenType::Ident != name.type)
+            return 0;
+        ++offset;
+        skipWhitespace();
+
+        if (typeName != name.lexeme.toString())
+            return 0;
+    }
+
+    const auto &cparen = scanner.peek(offset);
+    if (TokenType::Sym_CloseParen != cparen.type)
+        return 0;
+    ++offset;
+
+    return offset;
+}
+
 void CppParser::skipPreprocessorStatement()
 {
     assert(TokenType::Sym_Hash == scanner.peek().type);
@@ -255,6 +302,15 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
     requireType(scanner.peek(), TokenType::Sym_OpenCurly, nullptr);
     scanner.drop(); // {
     dropWhile(isWhitespace);
+
+    // @TODO: Don't only require the user to use the marker after class <name> {
+    auto typeMarkerOffset = detectTypeMarker(name.lexeme.toString());
+    if (typeMarkerOffset > 0) {
+        type.marked = true;
+
+        scanner.drop(typeMarkerOffset);
+        dropWhile(isWhitespace);
+    }
 
     if (not parseDecls(type.members))
         return nullptr;

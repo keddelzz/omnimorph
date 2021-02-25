@@ -86,6 +86,7 @@ struct TypeDecl
 {
     TypeKind kind { TypeKind::Invalid };
     List<Decl *> members;
+    bool marked { false };
 };
 
 struct FieldDecl
