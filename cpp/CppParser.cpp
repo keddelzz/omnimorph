@@ -148,32 +148,49 @@ Decl *CppParser::parseCompoundMember()
     requireType(name, TokenType::Ident, nullptr);
     dropWhile(isWhitespace);
 
+    const auto acceptField = [&]() -> Decl * {
+        auto decl = Ast::allocDecl(DeclKind::Field);
+        decl->name = name;
+        decl->visibility = context.peek().visibility;
+
+        auto &field = decl->field;
+        field.type = tpt;
+        return decl;
+    };
+
     switch (scanner.peek().type) {
         // <tpt> <ident> ;
         case TokenType::Sym_Semicolon: {
-            scanner.drop();
-
+            scanner.drop(); // ;
             dropWhile(isWhitespace);
 
-            auto decl = Ast::allocDecl(DeclKind::Field);
-            decl->name = name;
-            decl->visibility = context.peek().visibility;
-
-            auto &field = decl->field;
-            field.type = tpt;
-            return decl;
+            return acceptField();
         }
 
         // <tpt> <ident> = <exp> ;
         case TokenType::Sym_Equal: {
-            assert(false && "Unimplemented");
-            return nullptr;
+            scanner.drop(); // =
+            // Drop initializer
+            dropWhile(noSemicolon);
+
+            scanner.drop(); // ;
+            dropWhile(isWhitespace);
+
+            return acceptField();
         }
 
         // <tpt> <ident> { <exp>, ... } ;
         case TokenType::Sym_OpenCurly: {
-            assert(false && "Unimplemented");
-            return nullptr;
+            scanner.drop(); // {
+            // Drop initializer-list
+            dropUntil(isCloseCurly);
+            dropWhile(isWhitespace);
+
+            requireType(scanner.peek(), TokenType::Sym_Semicolon, nullptr)
+            scanner.drop(); // ;
+            dropWhile(isWhitespace);
+
+            return acceptField();
         }
 
         // <tpt> <ident> ( <param>, ... ) ;

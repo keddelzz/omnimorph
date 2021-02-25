@@ -37,9 +37,16 @@ private:
         while (p(scanner.peek()))
             scanner.drop();
     }
+    template<typename Predicate>
+    inline void dropUntil(Predicate p)
+    {
+        while (not p(scanner.peek()))
+            scanner.drop();
+    }
 
     constexpr static inline bool isWhitespace(const Token &token) { return TokenType::White == token.type; }
     constexpr static inline bool isSemicolon(const Token &token) { return TokenType::Sym_Semicolon == token.type; }
+    constexpr static inline bool noSemicolon(const Token &token) { return TokenType::Sym_Semicolon != token.type; }
     constexpr static inline bool isCloseCurly(const Token &token) { return TokenType::Sym_Semicolon == token.type; }
 
     template<typename T, typename ParseSingle, typename Predicate>

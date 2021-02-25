@@ -1,10 +1,13 @@
 struct Vec4f
 {
-    float x;
+    float x = 0;
 public:
     float y;
 private:
     float z;
+    struct Test {
+        int x { -3 };
+    };
 protected:
     float w;
 };
