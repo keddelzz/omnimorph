@@ -62,6 +62,18 @@ void String::initialize(String &string, const char *str, s64 length, bool own)
     }
 }
 
+bool String::operator==(const String &other) const
+{
+    if (length != other.length) return false;
+    if (data == other.data) return true;
+
+    for (auto i = 0; i < length; ++i) {
+        if (data[i] != other.data[i]) return false;
+    }
+
+    return true;
+}
+
 std::ostream &operator<<(std::ostream &stream, const String &string)
 {
     return stream.write(reinterpret_cast<char *>(string.data), string.length);

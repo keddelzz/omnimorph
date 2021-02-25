@@ -14,7 +14,10 @@ struct String
 
     constexpr u8 operator[](u64 index) const { return data[index]; }
     constexpr u8 &operator[](u64 index) { return data[index]; }
-    
+
+    bool operator==(const String &other) const;
+    bool operator!=(const String &other) const { return not (*this == other); }
+
     constexpr bool empty() const { return length == 0; }
 
     bool owned : 1 { false };
