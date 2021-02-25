@@ -12,6 +12,9 @@ struct String
     String(const String &other);
     ~String();
 
+    constexpr u8 operator[](u64 index) const { return data[index]; }
+    constexpr u8 &operator[](u64 index) { return data[index]; }
+    
     constexpr bool empty() const { return length == 0; }
 
     bool owned : 1 { false };
