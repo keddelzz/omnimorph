@@ -64,31 +64,25 @@ enum class DeclKind : u8
 {
     Invalid,
 
-    // types
-    CompoundType,
-    EnumType,
-    UnionType,
-
-    // members
+    Type,
     Field,
     Method
 };
 
 struct Decl;
 
-struct CompoundTypeDecl
+enum class TypeKind : u8
 {
-    bool isClass; // isClass ? class : struct
-    List<Decl *> members;
+    Invalid,
+    Class,
+    Struct,
+    Enum,
+    Union,
 };
 
-struct EnumTypeDecl
+struct TypeDecl
 {
-    List<Decl *> members;
-};
-
-struct UnionTypeDecl
-{
+    TypeKind kind { TypeKind::Invalid };
     List<Decl *> members;
 };
 
@@ -112,11 +106,9 @@ struct Decl
     Token name;
 
     union {
-        CompoundTypeDecl compoundType;
-        EnumTypeDecl     enumType;
-        UnionTypeDecl    unionType;
-        FieldDecl        field;
-        MethodDecl       method;
+        TypeDecl   type;
+        FieldDecl  field;
+        MethodDecl method;
     };
 };
 

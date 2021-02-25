@@ -197,20 +197,14 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
     requireType(name, TokenType::Ident, nullptr);
     dropWhile(isWhitespace);
 
-    auto kind = DeclKind::Invalid;
-    bool isClass = false;
     {
         NamespaceElement element;
-
         if (isCompound(namespaceType)) {
-            isClass = NamespaceType::Class == namespaceType;
-            element.visibility = isClass
+            element.visibility = NamespaceType::Class == namespaceType
                 ? Visibility::Private
                 : Visibility::Public;
-            kind = DeclKind::CompoundType;
         } else {
             element.visibility = Visibility::Public;
-            kind = DeclKind::UnionType;
         }
         element.namespaceType = namespaceType;
         element.elementName = name;
@@ -218,20 +212,23 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
         context.push(element);
     }
 
-    auto decl = Ast::allocDecl(kind); // @Leak
-    if (isCompound(namespaceType)) {
-        decl->compoundType.isClass = isClass;
-    }
+    auto decl = Ast::allocDecl(DeclKind::Type); // @Leak
+    decl->visibility = context.peek().visibility;
     decl->name = name;
+
+    auto &type = decl->type;
+    switch (namespaceType) {
+        case NamespaceType::Class:  type.kind = TypeKind::Class; break;
+        case NamespaceType::Struct: type.kind = TypeKind::Struct; break;
+        case NamespaceType::Union:  type.kind = TypeKind::Union; break;
+        default: assert(false && "Should be handled by previous assert!"); break;
+    }
 
     requireType(scanner.peek(), TokenType::Sym_OpenCurly, nullptr);
     scanner.drop(); // {
     dropWhile(isWhitespace);
 
-    auto &members = NamespaceType::Union == namespaceType
-        ? decl->unionType.members
-        : decl->compoundType.members;
-    if (not parseDecls(members))
+    if (not parseDecls(type.members))
         return nullptr;
 
     dropWhile(isWhitespace);
