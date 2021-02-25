@@ -89,19 +89,10 @@ void Ast::showStructure(StringBuilder &buffer, Decl *decl, TypeDecl &type, int l
 
 void Ast::showStructure(StringBuilder &buffer, Decl *decl, FieldDecl &field, int level)
 {
-    buffer.append("FieldDecl(\n");
-
-    makeIndentation(buffer, level + 1);
-    Ast::showStructure(buffer, decl->visibility); buffer.append(",\n");
-
-    makeIndentation(buffer, level + 1);
-    Ast::showStructure(buffer, field.type, level); buffer.append(",\n");
-
-    makeIndentation(buffer, level + 1);
-    buffer.append(decl->name.lexeme.toString()); buffer.append("\n");
-
-    makeIndentation(buffer, level);
-    buffer.append(")");
+    buffer.append("FieldDecl(");
+    Ast::showStructure(buffer, decl->visibility); buffer.append(", ");
+    Ast::showStructure(buffer, field.type, level); buffer.append(", ");
+    buffer.append(decl->name.lexeme.toString()); buffer.append(")");
 }
 
 void Ast::showStructure(StringBuilder &buffer, Decl *decl, MethodDecl &method, int level)
