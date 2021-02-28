@@ -4,15 +4,17 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(${PROJECT_NAME}_Types
     Vec2i.h
+    Fid.h
+    Nested.h
 )
 
 foreach(file in ${${PROJECT_NAME}_Types})
     if(NOT ${file} STREQUAL "in")
         add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${file}.generic
-            COMMAND ${OMNIMORPH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file}.generic
+            OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${file}.generic
+            COMMAND ${OMNIMORPH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_SOURCE_DIR}/${file}.generic
         )
-        list(APPEND ${PROJECT_NAME}_Reprs ${CMAKE_CURRENT_BINARY_DIR}/${file}.generic)
+        list(APPEND ${PROJECT_NAME}_Reprs ${CMAKE_CURRENT_SOURCE_DIR}/${file}.generic)
     endif()
 endforeach()
 
