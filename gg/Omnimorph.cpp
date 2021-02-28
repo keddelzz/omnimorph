@@ -209,6 +209,11 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
                 buffer.append('\n');
 
                 makeIndentation(buffer, 2);
+
+                // @TODO: It would be nice if you can configure how a value of your type is
+                //        instantiated (default constructor + member assignments, constructor
+                //        containing all members, initializer list, struct initializer syntax)
+
                 buffer.append("Type result;\n");
 
                 for (auto i = 0; i < fieldDecls.length; ++i) {
