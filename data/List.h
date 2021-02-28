@@ -59,7 +59,7 @@ struct List
     T   *data { nullptr };
 
 private:
-    bool indexInBounds(u64 index) const { return index <= length; }
+    bool indexInBounds(u64 index) const { return index < length; }
 
     void ensureCapacity(u64 newCapacity)
     {

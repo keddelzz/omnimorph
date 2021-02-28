@@ -9,6 +9,7 @@ class FileUtils
 {
 public:
     static String readEntireFile(const String &filePath);
+    static void writeEntireFile(const String &filePath, const String &fileContents);
 
 private:
     FileUtils() {}
