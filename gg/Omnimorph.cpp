@@ -74,6 +74,11 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
             buffer.append('_');
             buffer.append(subscript);
         };
+        const auto emitValueNameWithSubscript = [&](u64 subscript) {
+            buffer.append("list");
+            buffer.append('_');
+            buffer.append(subscript);
+        };
 
         {
             makeIndentation(buffer, 1);
@@ -115,7 +120,59 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
         makeIndentation(buffer, 1);
         buffer.append("using Repr = "); emitReprPrefix(); buffer.append(";\n");
 
-        //  @TODO: static Repr to(const Type &value)
+        buffer.append('\n');
+
+        {
+            makeIndentation(buffer, 1);
+            buffer.append("static Repr to(const Type &value)\n");
+            makeIndentation(buffer, 1);
+            buffer.append("{\n");
+
+            {
+                {
+                    makeIndentation(buffer, 2);
+                    buffer.append("const ");
+                    emitReprPrefixWithSubscript(fieldDecls.length);
+                    buffer.append(' ');
+                    emitValueNameWithSubscript(fieldDecls.length);
+                    buffer.append("{};\n");
+                }
+
+                for (auto i = fieldDecls.length - 1; i >= 0; --i) {
+                    const auto field = fieldDecls[i];
+
+                    makeIndentation(buffer, 2);
+                    buffer.append("const ");
+                    emitReprPrefixWithSubscript(i);
+                    buffer.append(' ');
+                    emitValueNameWithSubscript(i);
+                    buffer.append('(');
+                    const auto fieldName = field->name.lexeme.toString();
+                    buffer.append("value.");
+                    buffer.append(fieldName);
+                    buffer.append(", ");
+                    emitValueNameWithSubscript(i + 1);
+                    buffer.append(");\n");
+
+                    if (i == 0) break;
+                }
+
+                {
+                    makeIndentation(buffer, 2);
+                    buffer.append("const ");
+                    emitReprPrefix();
+                    buffer.append(" &list = ");
+                    emitValueNameWithSubscript(0);
+                    buffer.append(";\n");
+                }
+
+                makeIndentation(buffer, 2);
+                buffer.append("return list;\n");
+            }
+
+            makeIndentation(buffer, 1);
+            buffer.append("}\n");
+        }
         //  @TODO: static Type from(const Repr &repr)
     }
 
