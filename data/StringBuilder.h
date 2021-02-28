@@ -12,6 +12,7 @@ public:
     StringBuilder &append(const String &string);
     StringBuilder &append(s64 n);
     StringBuilder &append(u64 n);
+    StringBuilder &append(double n);
 
     bool empty() const { return length == 0; }
     String toString();

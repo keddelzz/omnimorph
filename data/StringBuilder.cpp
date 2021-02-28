@@ -67,6 +67,11 @@ StringBuilder &StringBuilder::append(u64 n)
     return appendUsingStdString(*this, n);
 }
 
+StringBuilder &StringBuilder::append(double n)
+{
+    return appendUsingStdString(*this, n);
+}
+
 String StringBuilder::toString()
 {
     String result;
