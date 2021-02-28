@@ -26,9 +26,9 @@ void StringBuilder::ensureCapacity(u64 newCapacity)
     }
 }
 
-StringBuilder &StringBuilder::append(u8 c)
+StringBuilder &StringBuilder::append(char c)
 {
-    u8 x = c;
+    auto x = u8(c);
     String temp;
     temp.owned = false;
     temp.data = &x;
@@ -42,6 +42,29 @@ StringBuilder &StringBuilder::append(const String &string)
     memcpy(&data[length], string.data, string.length);
     length += string.length;
     return *this;
+}
+
+template<typename T>
+static StringBuilder &appendUsingStdString(StringBuilder &builder, T value)
+{
+    // @Hack @Cleanup
+    auto stdString = std::to_string(value);
+
+    String string;
+    string.owned = false;
+    string.length = stdString.size();
+    string.data = reinterpret_cast<u8 *>(stdString.data());
+    return builder.append(string);
+}
+
+StringBuilder &StringBuilder::append(s64 n)
+{
+    return appendUsingStdString(*this, n);
+}
+
+StringBuilder &StringBuilder::append(u64 n)
+{
+    return appendUsingStdString(*this, n);
 }
 
 String StringBuilder::toString()

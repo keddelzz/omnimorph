@@ -8,8 +8,10 @@ class StringBuilder
 public:
     explicit StringBuilder();
 
-    StringBuilder &append(u8 c);
+    StringBuilder &append(char c);
     StringBuilder &append(const String &string);
+    StringBuilder &append(s64 n);
+    StringBuilder &append(u64 n);
 
     bool empty() const { return length == 0; }
     String toString();
