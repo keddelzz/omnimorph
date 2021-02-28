@@ -2,6 +2,9 @@
 
 #include "HList.h"
 
+#define generic(T) \
+    friend class CopyGeneric<T>;
+
 template<typename T>
 struct CopyGeneric
 {

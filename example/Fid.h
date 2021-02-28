@@ -1,3 +1,5 @@
+#include "../api/Generic.h"
+
 struct Fid
 {
     generic(Fid)

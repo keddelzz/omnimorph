@@ -25,8 +25,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const String &inputFile, 
     CppParser parser;
     parser.initialize(inputFile, fileContents);
 
-    buffer.append("#include \"api/HList.h\"\n");
-    buffer.append("#include \"api/Generic.h\"\n");
+    buffer.append("#include \"../api/HList.h\"\n");
+    buffer.append("#include \"../api/Generic.h\"\n");
 
     parser.foreachToplevelDeclaration([&](Decl *decl) {
         Omnimorph::traverseDecls(buffer, decl);
