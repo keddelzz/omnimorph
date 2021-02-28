@@ -199,6 +199,10 @@ Decl *CppParser::parseCompoundMember()
     auto tpt = parseTpt();
     dropWhile(isWhitespace);
 
+    EnabledScopeGuard freeTpt = [&]() {
+        if (tpt != nullptr) Ast::freeAst(tpt);
+    };
+
     auto name = scanner.drop();
     requireType(name, TokenType::Ident, nullptr);
     dropWhile(isWhitespace);
@@ -210,6 +214,8 @@ Decl *CppParser::parseCompoundMember()
 
         auto &field = decl->field;
         field.type = tpt;
+        freeTpt.disable();
+
         return decl;
     };
 
@@ -271,9 +277,10 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
     requireType(name, TokenType::Ident, nullptr);
     dropWhile(isWhitespace);
 
-    auto decl = Ast::allocDecl(DeclKind::Type); // @Leak
+    auto decl = Ast::allocDecl(DeclKind::Type);
     decl->visibility = context.peek().visibility;
     decl->name = name;
+    EnabledScopeGuard freeDecl = [&]() { Ast::freeAst(decl); };
 
     {
         NamespaceElement element;
@@ -324,6 +331,8 @@ Decl *CppParser::parseCompoundTypeDecl(NamespaceType namespaceType)
     requireType(scanner.peek(), TokenType::Sym_Semicolon, nullptr);
     scanner.drop(); // ;
     dropWhile(isWhitespace);
+
+    freeDecl.disable();
 
     return decl;
 }
