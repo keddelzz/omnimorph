@@ -172,8 +172,64 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
 
             makeIndentation(buffer, 1);
             buffer.append("}\n");
+
+            buffer.append('\n');
         }
-        //  @TODO: static Type from(const Repr &repr)
+
+        {
+            makeIndentation(buffer, 1);
+            buffer.append("static Type from(const Repr &repr)\n");
+            makeIndentation(buffer, 1);
+            buffer.append("{\n");
+
+            {
+                {
+                    makeIndentation(buffer, 2);
+                    buffer.append("const ");
+                    emitReprPrefix();
+                    buffer.append(" &list = repr;\n");
+                }
+
+                for (auto i = 0; i < fieldDecls.length; ++i) {
+                    makeIndentation(buffer, 2);
+                    buffer.append("const ");
+                    emitReprPrefixWithSubscript(i);
+                    buffer.append(" &");
+                    emitValueNameWithSubscript(i);
+                    buffer.append(" = ");
+
+                    if (i == 0) {
+                        buffer.append("list;\n");
+                    } else {
+                        emitValueNameWithSubscript(i - 1);
+                        buffer.append(".tail;\n");
+                    }
+                }
+
+                buffer.append('\n');
+
+                makeIndentation(buffer, 2);
+                buffer.append("Type result;\n");
+
+                for (auto i = 0; i < fieldDecls.length; ++i) {
+                    const auto field = fieldDecls[i];
+                    const auto fieldName = field->name.lexeme.toString();
+
+                    makeIndentation(buffer, 2);
+                    buffer.append("result.");
+                    buffer.append(fieldName);
+                    buffer.append(" = ");
+                    emitValueNameWithSubscript(i);
+                    buffer.append(".head;\n");
+                }
+
+                makeIndentation(buffer, 2);
+                buffer.append("return result;\n");
+            }
+
+            makeIndentation(buffer, 1);
+            buffer.append("}\n");
+        }
     }
 
     buffer.append("};\n");
