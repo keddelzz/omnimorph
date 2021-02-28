@@ -9,7 +9,8 @@ namespace gg {
 class Omnimorph
 {
 public:
-    static void generateGeneric(StringBuilder &buffer, const String &inputFile);
+    static void generateGeneric(const String &inputFile, const String &outputFile);
+    static void generateGeneric(StringBuilder &buffer, const String &inputFile, const String &fileContents);
 
 private:
     static void traverseDecls(StringBuilder &buffer, const cpp::Decl *decl);

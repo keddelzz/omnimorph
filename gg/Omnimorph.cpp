@@ -8,11 +8,19 @@
 
 namespace gg {
 
-void Omnimorph::generateGeneric(StringBuilder &buffer, const String &inputFile)
+void Omnimorph::generateGeneric(const String &inputFile, const String &outputFile)
 {
     using namespace cpp;
-
     const auto fileContents = FileUtils::readEntireFile(inputFile);
+
+    StringBuilder buffer;
+    Omnimorph::generateGeneric(buffer, inputFile, fileContents);
+    FileUtils::writeEntireFile(outputFile, buffer.toString());
+}
+
+void Omnimorph::generateGeneric(StringBuilder &buffer, const String &inputFile, const String &fileContents)
+{
+    using namespace cpp;
 
     CppParser parser;
     parser.initialize(inputFile, fileContents);

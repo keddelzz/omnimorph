@@ -5,8 +5,7 @@
 int main()
 {
     const String inputFile("../example/Fid.h");
-    StringBuilder buffer;
-    gg::Omnimorph::generateGeneric(buffer, inputFile);
-    std::cout << buffer.toString() << std::endl;
+    const String outputFile("../example/Fid.h.generic");
+    gg::Omnimorph::generateGeneric(inputFile, outputFile);
     return EXIT_SUCCESS;
 }
