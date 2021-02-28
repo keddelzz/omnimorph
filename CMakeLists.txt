@@ -21,6 +21,7 @@ add_executable(${PROJECT_NAME}
     cpp/Lookahead.cpp
     cpp/Ast.cpp
     cpp/CppParser.cpp
+    gg/Omnimorph.cpp
     main.cpp)
 
 target_compile_features(${PROJECT_NAME}

@@ -7,7 +7,9 @@
 #include "cpp/Ast.h"
 #include "cpp/CppParser.h"
 
-int main()
+#include "gg/Omnimorph.h"
+
+int main_()
 {
     std::cout << "Hello, omnimorph!" << std::endl;
 
@@ -24,5 +26,14 @@ int main()
         return IterationDecision::Continue;
     });
 
+    return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[])
+{
+    const String inputFile("../example/Fid.h");
+    StringBuilder buffer;
+    gg::Omnimorph::generateGeneric(buffer, inputFile);
+    std::cout << buffer.toString() << std::endl;
     return EXIT_SUCCESS;
 }
