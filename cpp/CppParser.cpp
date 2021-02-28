@@ -350,6 +350,8 @@ bool CppParser::canBeDecl()
 
 Decl *CppParser::parseDecl()
 {
+    // @TODO: Parse constructors
+
     switch (scanner.peek().type) {
         case TokenType::Kw_class : return parseCompoundTypeDecl(NamespaceType::Class);
         case TokenType::Kw_struct: return parseCompoundTypeDecl(NamespaceType::Struct);
