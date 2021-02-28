@@ -412,3 +412,7 @@
     State advance_411(ScannerDriver::Char c) const;
     State advance_412(ScannerDriver::Char c) const;
     State advance_413(ScannerDriver::Char c) const;
+    State advance_414(ScannerDriver::Char c) const;
+    State advance_415(ScannerDriver::Char c) const;
+    State advance_416(ScannerDriver::Char c) const;
+    State advance_417(ScannerDriver::Char c) const;

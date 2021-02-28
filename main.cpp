@@ -1,16 +1,28 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "cpp/CppScanner.h"
+#include "data/IterationDecision.h"
+
+#include "cpp/FileUtils.h"
+#include "cpp/Ast.h"
+#include "cpp/CppParser.h"
 
 int main()
 {
     std::cout << "Hello, omnimorph!" << std::endl;
 
-    auto scanner = cpp::CppScanner::fromFile("../example/cpptokens.txt");
-    while (scanner->hasNext()) {
-        std::cout << scanner->next() << std::endl;
-    }
+    const String filePath("../example/Vec4f.h");
+    const auto fileContents = cpp::FileUtils::readEntireFile(filePath);
+
+    using namespace cpp;
+    CppParser parser;
+    parser.initialize(filePath, fileContents);
+    parser.foreachToplevelDeclaration([](Decl *decl) {
+        StringBuilder buffer;
+        Ast::showStructure(buffer, decl);
+        std::cout << buffer.toString() << std::endl;
+        return IterationDecision::Continue;
+    });
 
     return EXIT_SUCCESS;
 }

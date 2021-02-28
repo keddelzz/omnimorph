@@ -2,7 +2,7 @@
 
 #include <ostream>
 
-#include "types.h"
+#include "../data/types.h"
 
 namespace cpp {
 

@@ -137,6 +137,8 @@ std::ostream &operator<<(std::ostream &stream, TokenType type)
         case TokenType::StringLit: return stream << "StringLit";
         case TokenType::Ident: return stream << "Ident";
         case TokenType::White: return stream << "White";
+        case TokenType::Comment_SingleLine: return stream << "Comment_SingleLine";
+        case TokenType::Comment_MultiLine: return stream << "Comment_MultiLine";
         case TokenType::Eof: return stream << "Eof";
         case TokenType::_TokenCount: return stream << "_TokenCount";
         default: assert(false);

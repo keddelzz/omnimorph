@@ -2,7 +2,8 @@
 
 #include <ostream>
 
-#include "types.h"
+#include "../data/types.h"
+#include "../data/String.h"
 
 namespace cpp {
 
@@ -15,6 +16,7 @@ struct Lexeme
     const u8 *end;   // exclusive
 
     bool isNullLexeme() const;
+    String toString() const;
 };
 
 std::ostream &operator<<(std::ostream &, const Lexeme &lexeme);

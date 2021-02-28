@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
-#include "types.h"
+#include "../data/types.h"
+#include "../data/String.h"
 #include "FilePosition.h"
 
 namespace cpp {
@@ -10,12 +10,12 @@ struct FileRange
 {
     explicit FileRange() = default;
     explicit FileRange(
-        std::string fileName,
+        const String &fileName,
         const FilePosition &start,
         const FilePosition &end
     );
 
-    std::string  fileName;
+    String       fileName;
     FilePosition start;
     FilePosition end;
 

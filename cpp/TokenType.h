@@ -137,6 +137,8 @@ enum class TokenType : int16_t
     StringLit,
     Ident,
     White,
+    Comment_SingleLine,
+    Comment_MultiLine,
     Eof,
     _TokenCount,
 };

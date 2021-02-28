@@ -3,10 +3,10 @@
 namespace cpp {
 
 FileRange::FileRange(
-    std::string fileName,
+    const String &fileName,
     const FilePosition &start,
     const FilePosition &end)
-    : fileName(std::move(fileName))
+    : fileName(fileName)
     , start(start)
     , end(end)
 {}
@@ -22,7 +22,8 @@ std::ostream &operator<<(std::ostream &stream, const FileRange &range)
 {
     return stream
         << range.fileName << ':'
-        << range.start << '-'
+        << range.start << ", "
+        << range.fileName << ':'
         << range.end;
 }
 

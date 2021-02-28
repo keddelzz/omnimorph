@@ -17,14 +17,18 @@ bool Lexeme::isNullLexeme() const
            end == nullptr;
 }
 
+String Lexeme::toString() const
+{
+    String result;
+    result.owned = false;
+    result.length = end - start;
+    result.data = const_cast<u8 *>(start);
+    return result;
+}
+
 std::ostream &operator<<(std::ostream &stream, const Lexeme &lexeme)
 {
-    // @Cleanup
-    std::string string;
-    const auto lexemeLength = lexeme.end - lexeme.start;
-    string.resize(lexemeLength);
-    memcpy(string.data(), lexeme.start, lexemeLength);
-    return stream << string;
+    return stream << lexeme.toString();
 }
 
 }

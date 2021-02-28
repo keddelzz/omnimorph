@@ -5,14 +5,21 @@
 
 namespace cpp {
 
-ScannerDriver::ScannerDriver(
-    std::string fileName,
-    std::vector<u8> fileContents)
-    : m_fileName(std::move(fileName))
-    , m_fileContents(std::move(fileContents))
+ScannerDriver::ScannerDriver()
+{}
+
+ScannerDriver::~ScannerDriver()
+{}
+
+void ScannerDriver::initialize(const String &fileName, const String &fileContents)
 {
-    if (not m_fileContents.empty())
+    m_fileName = fileName;
+    m_fileContents = fileContents;
+
+    m_currentOffset = -1;
+    if (not m_fileContents.empty()) {
         m_currentOffset = 0;
+    }
 }
 
 bool ScannerDriver::hasNext()
@@ -64,14 +71,14 @@ Token ScannerDriver::next()
 
 bool ScannerDriver::hasCharacter() const
 {
-    return between<s64>(0, m_currentOffset, m_fileContents.size() - 1);
+    return between<s64>(0, m_currentOffset, m_fileContents.length - 1);
 }
 
 ScannerDriver::Char ScannerDriver::nextCharacter()
 {
     assert(hasCharacter());
 
-    const auto c = m_fileContents[m_currentOffset];
+    const auto c = m_fileContents.data[m_currentOffset];
     ++m_currentOffset;
 
     if ('\n' == c) {
@@ -119,8 +126,8 @@ Token ScannerDriver::scanNextToken()
         restoreRecoveryPoint();
 
         const Lexeme lexeme(
-            m_fileContents.data() + m_startOffset,
-            m_fileContents.data() + m_endOffset
+            m_fileContents.data + m_startOffset,
+            m_fileContents.data + m_endOffset
         );
         const auto &start = m_startAccepting;
         const auto &end = m_endAccepting;
