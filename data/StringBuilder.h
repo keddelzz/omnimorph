@@ -11,6 +11,7 @@ public:
     StringBuilder &append(u8 c);
     StringBuilder &append(const String &string);
 
+    bool empty() const { return length == 0; }
     String toString();
 
 private:
