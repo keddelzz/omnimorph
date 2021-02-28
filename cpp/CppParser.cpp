@@ -364,6 +364,8 @@ bool CppParser::parseDecls(List<Decl *> &members)
             skipPreprocessorStatement();
         }
 
+        dropWhile(isWhitespace);
+
         auto visibility = Visibility::Invalid;
         do {
             visibility = parseVisibilityBlock();
@@ -372,6 +374,8 @@ bool CppParser::parseDecls(List<Decl *> &members)
                 elem.visibility = visibility;
             }
         } while (Visibility::Invalid != visibility);
+
+        dropWhile(isWhitespace);
 
         if (not canBeDecl()) break;
 

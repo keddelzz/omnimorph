@@ -44,7 +44,15 @@ private:
             scanner.drop();
     }
 
-    constexpr static inline bool isWhitespace(const Token &token) { return TokenType::White == token.type; }
+    constexpr static inline bool isWhitespace(const Token &token)
+    {
+        switch (token.type) {
+            case TokenType::White             : return true;
+            case TokenType::Comment_SingleLine: return true;
+            case TokenType::Comment_MultiLine : return true;
+            default                           : return false;
+        }
+    }
     static inline bool isWhitespaceContainingLinebreak(const Token &token)
     {
         if (TokenType::White != token.type) return false;
