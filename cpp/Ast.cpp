@@ -72,7 +72,10 @@ void Ast::showStructure(StringBuilder &buffer, Decl *decl, TypeDecl &type, int l
     Ast::showStructure(buffer, decl->visibility); buffer.append(",\n");
 
     makeIndentation(buffer, level + 1);
-    Ast::showStructure(buffer, type.kind);
+    Ast::showStructure(buffer, type.kind); buffer.append(",\n");
+
+    makeIndentation(buffer, level + 1);
+    buffer.append(decl->name.lexeme.toString());
 
     if (not type.members.empty()) {
         buffer.append(",\n");
