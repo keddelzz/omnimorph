@@ -23,3 +23,7 @@ add_executable(${PROJECT_NAME}
     ${${PROJECT_NAME}_Reprs}
     main.cpp
 )
+
+target_include_directories(${PROJECT_NAME}
+    PRIVATE ${OMNIMORPH_INSTALL_DIR}/include
+)
