@@ -3,9 +3,9 @@ project(generic-clear C CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 set(${PROJECT_NAME}_Types
-    Vec2i.h
-    Fid.h
-    Nested.h
+    ../common/Vec2i.h
+    ../common/Fid.h
+    ../common/Nested.h
 )
 
 foreach(file in ${${PROJECT_NAME}_Types})

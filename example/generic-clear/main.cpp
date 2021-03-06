@@ -1,12 +1,13 @@
 #include <iostream>
 
-#include "../../api/Generic.h"
-#include "Vec2i.h"
-#include "Vec2i.h.generic"
-#include "Fid.h"
-#include "Fid.h.generic"
-#include "Nested.h"
-#include "Nested.h.generic"
+#include <omnimorph/Generic.h>
+
+#include "../common/Vec2i.h"
+#include "../common/Vec2i.h.generic"
+#include "../common/Fid.h"
+#include "../common/Fid.h.generic"
+#include "../common/Nested.h"
+#include "../common/Nested.h.generic"
 
 void gclear(int *value) { *value = 0; }
 void gclear(float *value) { *value = 0; }

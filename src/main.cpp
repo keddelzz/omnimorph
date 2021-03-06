@@ -4,7 +4,6 @@
 
 // @TODO: Can we somehow make CMake include the generic representation, if the
 //        type is included?
-// @TODO: Share structs/classes of examples? Should each example be independent?
 // @TODO: Make kilogrammar open-source
 
 int main(int argc, char *args[])

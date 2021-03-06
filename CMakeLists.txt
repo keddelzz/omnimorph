@@ -80,11 +80,7 @@ install(FILES
     DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 )
 
-add_subdirectory(
-    example/generic-printer
-    EXCLUDE_FROM_ALL
-)
-add_subdirectory(
-    example/generic-clear
-    EXCLUDE_FROM_ALL
-)
+set(COMMON_EXAMPLE_FLAGS "EXCLUDE_FROM_ALL")
+
+add_subdirectory(example/generic-printer ${COMMON_EXAMPLE_FLAGS})
+add_subdirectory(example/generic-clear ${COMMON_EXAMPLE_FLAGS})
