@@ -25,6 +25,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const String &inputFile, 
     CppParser parser;
     parser.initialize(inputFile, fileContents);
 
+    buffer.append("#pragma once\n");
     buffer.append("#include <omnimorph/HList.h>\n");
     buffer.append("#include <omnimorph/Generic.h>\n");
 
