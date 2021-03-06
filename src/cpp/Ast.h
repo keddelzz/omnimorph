@@ -121,8 +121,8 @@ public:
     template<typename T>
     constexpr static void freeAst(T *ast) { free(ast); }
 
-    static void showStructure(StringBuilder &buffer, Exp *exp, int level = 0);
-    static void showStructure(StringBuilder &buffer, Decl *decl, int level = 0);
+    static void showStructure(StringBuilder &buffer, const Exp *exp, int level = 0);
+    static void showStructure(StringBuilder &buffer, const Decl *decl, int level = 0);
 
 private:
     static void makeIndentation(StringBuilder &buffer, int level);
@@ -130,12 +130,12 @@ private:
     static void showStructure(StringBuilder &buffer, Visibility visibility);
     static void showStructure(StringBuilder &buffer, TypeKind kind);
 
-    static void showStructure(StringBuilder &buffer, Exp *decl, PrimitiveExp &primitive, int level);
-    static void showStructure(StringBuilder &buffer, Exp *decl, NameExp &name, int level);
+    static void showStructure(StringBuilder &buffer, const Exp *decl, const PrimitiveExp &primitive, int level);
+    static void showStructure(StringBuilder &buffer, const Exp *decl, const NameExp &name, int level);
 
-    static void showStructure(StringBuilder &buffer, Decl *decl, TypeDecl &type, int level);
-    static void showStructure(StringBuilder &buffer, Decl *decl, FieldDecl &field, int level);
-    static void showStructure(StringBuilder &buffer, Decl *decl, MethodDecl &method, int level);
+    static void showStructure(StringBuilder &buffer, const Decl *decl, const TypeDecl &type, int level);
+    static void showStructure(StringBuilder &buffer, const Decl *decl, const FieldDecl &field, int level);
+    static void showStructure(StringBuilder &buffer, const Decl *decl, const MethodDecl &method, int level);
 
     template<typename T>
     constexpr static T *alloc(u64 count)

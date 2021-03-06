@@ -30,7 +30,7 @@ void Ast::showStructure(StringBuilder &buffer, TypeKind kind) {
     }
 }
 
-void Ast::showStructure(StringBuilder &buffer, Exp *decl, PrimitiveExp &primitive, int level)
+void Ast::showStructure(StringBuilder &buffer, const Exp *decl, const PrimitiveExp &primitive, int level)
 {
     switch (primitive.kind) {
         case PrimitiveExpKind::Invalid : buffer.append("INVALID"); break;
@@ -46,12 +46,12 @@ void Ast::showStructure(StringBuilder &buffer, Exp *decl, PrimitiveExp &primitiv
     }
 }
 
-void Ast::showStructure(StringBuilder &buffer, Exp *decl, NameExp &name, int level)
+void Ast::showStructure(StringBuilder &buffer, const Exp *decl, const NameExp &name, int level)
 {
     buffer.append(name.name.lexeme.toString());
 }
 
-void Ast::showStructure(StringBuilder &buffer, Exp *exp, int level)
+void Ast::showStructure(StringBuilder &buffer, const Exp *exp, int level)
 {
     switch (exp->kind) {
         case ExpKind::Primitive: Ast::showStructure(buffer, exp, exp->primitive, level); break;
@@ -60,7 +60,7 @@ void Ast::showStructure(StringBuilder &buffer, Exp *exp, int level)
     }
 }
 
-void Ast::showStructure(StringBuilder &buffer, Decl *decl, TypeDecl &type, int level)
+void Ast::showStructure(StringBuilder &buffer, const Decl *decl, const TypeDecl &type, int level)
 {
     buffer.append("TypeDecl");
     if (type.marked) {
@@ -94,7 +94,7 @@ void Ast::showStructure(StringBuilder &buffer, Decl *decl, TypeDecl &type, int l
     buffer.append(")");
 }
 
-void Ast::showStructure(StringBuilder &buffer, Decl *decl, FieldDecl &field, int level)
+void Ast::showStructure(StringBuilder &buffer, const Decl *decl, const FieldDecl &field, int level)
 {
     buffer.append("FieldDecl(");
     Ast::showStructure(buffer, decl->visibility); buffer.append(", ");
@@ -102,12 +102,12 @@ void Ast::showStructure(StringBuilder &buffer, Decl *decl, FieldDecl &field, int
     buffer.append(decl->name.lexeme.toString()); buffer.append(")");
 }
 
-void Ast::showStructure(StringBuilder &buffer, Decl *decl, MethodDecl &method, int level)
+void Ast::showStructure(StringBuilder &buffer, const Decl *decl, const MethodDecl &method, int level)
 {
     assert(false && "Ast::showStructure(MethodDecl) not implemented!");
 }
 
-void Ast::showStructure(StringBuilder &buffer, Decl *decl, int level)
+void Ast::showStructure(StringBuilder &buffer, const Decl *decl, int level)
 {
     switch (decl->kind) {
         case DeclKind::Type   : Ast::showStructure(buffer, decl, decl->type, level); break;
