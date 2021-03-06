@@ -8,9 +8,6 @@
 #include "Nested.h"
 #include "Nested.h.generic"
 
-// @TODO: Can we somehow make CMake include the generic representation, if the
-//        type is included?
-
 void gclear(int *value) { *value = 0; }
 void gclear(float *value) { *value = 0; }
 void gclear(double *value) { *value = 0; }

@@ -5,6 +5,7 @@
 
 namespace cpp {
 
+// @TODO: cpp::CppScanner -> cpp::Scanner
 class CppScanner
     : public ScannerDriver
 {

@@ -8,9 +8,6 @@
 #include "Nested.h"
 #include "Nested.h.generic"
 
-// @TODO: Can we somehow make CMake include the generic representation, if the
-//        type is included?
-
 void gprint(std::ostream &stream, int value)
 { stream << value; }
 void gprint(std::ostream &stream, float value)
