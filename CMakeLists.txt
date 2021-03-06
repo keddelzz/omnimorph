@@ -84,3 +84,7 @@ add_subdirectory(
     example/generic-printer
     EXCLUDE_FROM_ALL
 )
+add_subdirectory(
+    example/generic-clear
+    EXCLUDE_FROM_ALL
+)
