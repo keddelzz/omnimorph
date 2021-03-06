@@ -33,10 +33,16 @@ private:
 
     static void makeIndentation(StringBuilder &buffer, int level);
 
+    using EmitMemberType = void (*) (StringBuilder &buffer, const FieldInformation &field); // <type-name>
+    using EmitMemberAccess = void (*) (StringBuilder &buffer, const String &instanceName, const FieldInformation &field); // <instance>.<name>
+
     struct Generator
     {
         TypeInformation typeInformation;
         String specializationName;
+
+        EmitMemberType emitMemberType { nullptr };
+        EmitMemberAccess emitMemberAccess { nullptr };
     };
     static void generate(Generator &generator, StringBuilder &buffer);
 

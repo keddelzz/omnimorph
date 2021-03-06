@@ -49,12 +49,23 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 {
     using namespace cpp;
 
-    Generator generator {
+    Generator copyGenericGenerator {
         .typeInformation = preprocess(decl),
-        .specializationName = "CopyGeneric"
+        .specializationName = "CopyGeneric",
+
+        .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
+            // @TODO: Show structure shows the structure of the type,
+            //        but here we require the cpp-expression.
+            Ast::showStructure(buffer, field.type);
+        },
+        .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+            buffer.append(instanceName);
+            buffer.append('.');
+            buffer.append(field.name);
+        }
     };
 
-    Omnimorph::generate(generator, buffer);
+    Omnimorph::generate(copyGenericGenerator, buffer);
 }
 
 Omnimorph::TypeInformation Omnimorph::preprocess(const cpp::Decl *decl)
@@ -132,9 +143,7 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
             buffer.append("using ");
             emitReprPrefixWithSubscript(i);
             buffer.append(" = HList<");
-            cpp::Ast::showStructure(buffer, field.type);
-                // @TODO: Show structure shows the structure of the type,
-                //        but here we require the cpp-expression.
+            generator.emitMemberType(buffer, field);
             buffer.append(", ");
             emitReprPrefixWithSubscript(i + 1);
             buffer.append(">;\n");
@@ -188,8 +197,7 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                     buffer.append(' ');
                     emitValueNameWithSubscript(i);
                     buffer.append('(');
-                    buffer.append("value.");
-                    buffer.append(field.name);
+                    generator.emitMemberAccess(buffer, "value", field);
                     buffer.append(", ");
                     emitValueNameWithSubscript(i + 1);
                     buffer.append(");\n");
@@ -259,8 +267,7 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                 for (auto i = 0; i < fieldDecls.length; ++i) {
                     const auto &field = fieldDecls[i];
                     makeIndentation(buffer, 2);
-                    buffer.append("result.");
-                    buffer.append(field.name);
+                    generator.emitMemberAccess(buffer, "result", field);
                     buffer.append(" = ");
                     emitValueNameWithSubscript(i);
                     buffer.append(".head;\n");
