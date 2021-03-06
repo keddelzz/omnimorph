@@ -45,6 +45,13 @@ void Omnimorph::traverseDecls(StringBuilder &buffer, const cpp::Decl *decl)
     Omnimorph::generateGeneric(buffer, decl);
 }
 
+void showType(StringBuilder &buffer, const cpp::Exp *type)
+{
+    // @TODO: Show structure shows the structure of the type,
+    //        but here we require the cpp-expression.
+    cpp::Ast::showStructure(buffer, type);
+}
+
 void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 {
     using namespace cpp;
@@ -57,9 +64,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
         .generation = Generation(u8(Generation::To) | u8(Generation::From)),
         .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
-            // @TODO: Show structure shows the structure of the type,
-            //        but here we require the cpp-expression.
-            Ast::showStructure(buffer, field.type);
+            showType(buffer, field.type);
         },
         .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
             buffer.append(instanceName);
