@@ -36,11 +36,18 @@ private:
     using EmitMemberType = void (*) (StringBuilder &buffer, const FieldInformation &field); // <type-name>
     using EmitMemberAccess = void (*) (StringBuilder &buffer, const String &instanceName, const FieldInformation &field); // <instance>.<name>
 
+    enum class Generation : u8
+    {
+        None = 0x0,
+        To   = 0x1,
+        From = 0x2
+    };
     struct Generator
     {
         TypeInformation typeInformation;
         String specializationName;
 
+        Generation generation { Generation::None };
         EmitMemberType emitMemberType { nullptr };
         EmitMemberAccess emitMemberAccess { nullptr };
     };

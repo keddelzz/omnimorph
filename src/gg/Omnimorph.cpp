@@ -53,6 +53,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
         .typeInformation = preprocess(decl),
         .specializationName = "CopyGeneric",
 
+        .generation = Generation(u8(Generation::To) | u8(Generation::From)),
         .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
             // @TODO: Show structure shows the structure of the type,
             //        but here we require the cpp-expression.
@@ -99,6 +100,12 @@ void Omnimorph::makeIndentation(StringBuilder &buffer, int level)
 
 void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 {
+    const auto generateTo   = bool(u8(Generation::To) & u8(generator.generation));
+    const auto generateFrom = bool(u8(Generation::From) & u8(generator.generation));
+
+    if (not generateFrom and not generateTo)
+        return;
+
     const auto &typeInformation = generator.typeInformation;
     const auto &typeName = typeInformation.typeName;
     const auto &fieldDecls = typeInformation.fieldDecls;
@@ -172,7 +179,7 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 
         buffer.append('\n');
 
-        {
+        if (generateTo) {
             makeIndentation(buffer, 1);
             buffer.append("static Repr to(const Type &value)\n");
             makeIndentation(buffer, 1);
@@ -220,11 +227,13 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 
             makeIndentation(buffer, 1);
             buffer.append("}\n");
+        }
 
+        if (generateTo and generateFrom) {
             buffer.append('\n');
         }
 
-        {
+        if (generateFrom) {
             makeIndentation(buffer, 1);
             buffer.append("static Type from(const Repr &repr)\n");
             makeIndentation(buffer, 1);
