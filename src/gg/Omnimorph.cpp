@@ -63,6 +63,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
         .specializationName = "CopyGeneric",
 
         .generation = Generation(u8(Generation::To) | u8(Generation::From)),
+        .constParameter = Generation(u8(Generation::To) | u8(Generation::From)),
         .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
             showType(buffer, field.type);
         },
@@ -112,6 +113,9 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 
     if (not generateFrom and not generateTo)
         return;
+
+    const auto constArgumentTo   = bool(u8(Generation::To) & u8(generator.constParameter));
+    const auto constArgumentFrom = bool(u8(Generation::From) & u8(generator.constParameter));
 
     const auto &typeInformation = *generator.typeInformation;
     const auto &typeName = typeInformation.typeName;
@@ -188,14 +192,21 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 
         if (generateTo) {
             makeIndentation(buffer, 1);
-            buffer.append("static Repr to(const Type &value)\n");
+            buffer.append("static Repr to(");
+            if (constArgumentTo) {
+                buffer.append("const ");
+            }
+            buffer.append("Type &value)\n");
+
             makeIndentation(buffer, 1);
             buffer.append("{\n");
 
             {
                 {
                     makeIndentation(buffer, 2);
-                    buffer.append("const ");
+                    if (constArgumentTo) {
+                        buffer.append("const ");
+                    }
                     emitReprPrefixWithSubscript(fieldDecls.length);
                     buffer.append(' ');
                     emitValueNameWithSubscript(fieldDecls.length);
@@ -206,7 +217,9 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                     const auto &field = fieldDecls[i];
 
                     makeIndentation(buffer, 2);
-                    buffer.append("const ");
+                    if (constArgumentTo) {
+                        buffer.append("const ");
+                    }
                     emitReprPrefixWithSubscript(i);
                     buffer.append(' ');
                     emitValueNameWithSubscript(i);
@@ -221,7 +234,9 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 
                 {
                     makeIndentation(buffer, 2);
-                    buffer.append("const ");
+                    if (constArgumentTo) {
+                        buffer.append("const ");
+                    }
                     emitReprPrefix();
                     buffer.append(" &list = ");
                     emitValueNameWithSubscript(0);
@@ -242,21 +257,30 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 
         if (generateFrom) {
             makeIndentation(buffer, 1);
-            buffer.append("static Type from(const Repr &repr)\n");
+            buffer.append("static Type from(");
+            if (constArgumentFrom) {
+                buffer.append("const ");
+            }
+            buffer.append("Repr &repr)\n");
+
             makeIndentation(buffer, 1);
             buffer.append("{\n");
 
             {
                 {
                     makeIndentation(buffer, 2);
-                    buffer.append("const ");
+                    if (constArgumentFrom) {
+                        buffer.append("const ");
+                    }
                     emitReprPrefix();
                     buffer.append(" &list = repr;\n");
                 }
 
                 for (auto i = 0; i < fieldDecls.length; ++i) {
                     makeIndentation(buffer, 2);
-                    buffer.append("const ");
+                    if (constArgumentFrom) {
+                        buffer.append("const ");
+                    }
                     emitReprPrefixWithSubscript(i);
                     buffer.append(" &");
                     emitValueNameWithSubscript(i);

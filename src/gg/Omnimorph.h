@@ -48,6 +48,7 @@ private:
         String specializationName;
 
         Generation generation { Generation::None };
+        Generation constParameter { Generation::None };
         EmitMemberType emitMemberType { nullptr };
         EmitMemberAccess emitMemberAccess { nullptr };
     };
