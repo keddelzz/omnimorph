@@ -14,9 +14,32 @@ public:
 
 private:
     static void traverseDecls(StringBuilder &buffer, const cpp::Decl *decl);
+    static void generateGeneric(StringBuilder &buffer, const cpp::Decl *decl);
+
+    struct FieldInformation
+    {
+        const cpp::Decl *decl { nullptr };
+        const cpp::Exp *type { nullptr };
+        String name;
+    };
+    struct TypeInformation
+    {
+        const cpp::Decl *decl { nullptr };
+        const cpp::TypeDecl *type { nullptr };
+        String typeName;
+        List<FieldInformation> fieldDecls;
+    };
+    static TypeInformation preprocess(const cpp::Decl *decl);
 
     static void makeIndentation(StringBuilder &buffer, int level);
-    static void generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, const cpp::TypeDecl &type);
+
+    struct Generator
+    {
+        TypeInformation typeInformation;
+        String specializationName;
+    };
+    static void generate(Generator &generator, StringBuilder &buffer);
+
 };
 
 }

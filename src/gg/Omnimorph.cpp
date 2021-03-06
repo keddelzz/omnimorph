@@ -42,7 +42,39 @@ void Omnimorph::traverseDecls(StringBuilder &buffer, const cpp::Decl *decl)
     const auto &type = decl->type;
 
     if (not type.marked) return;
-    Omnimorph::generateGeneric(buffer, decl, type);
+    Omnimorph::generateGeneric(buffer, decl);
+}
+
+void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
+{
+    using namespace cpp;
+
+    Generator generator {
+        .typeInformation = preprocess(decl),
+        .specializationName = "CopyGeneric"
+    };
+
+    Omnimorph::generate(generator, buffer);
+}
+
+Omnimorph::TypeInformation Omnimorph::preprocess(const cpp::Decl *decl)
+{
+    TypeInformation result;
+    result.decl = decl;
+    result.type = &decl->type;
+    result.typeName = decl->name.lexeme.toString();
+
+    for (auto i = 0; i < result.type->members.length; ++i) {
+        const auto member = result.type->members[i];
+        if (cpp::DeclKind::Field != member->kind) continue;
+
+        FieldInformation field;
+        field.decl = member;
+        field.type = member->field.type;
+        field.name = member->name.lexeme.toString();
+        result.fieldDecls.append(field);
+    }
+    return result;
 }
 
 void Omnimorph::makeIndentation(StringBuilder &buffer, int level)
@@ -54,28 +86,26 @@ void Omnimorph::makeIndentation(StringBuilder &buffer, int level)
     }
 }
 
-void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, const cpp::TypeDecl &type)
+void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 {
-    using namespace cpp;
+    const auto &typeInformation = generator.typeInformation;
+    const auto &typeName = typeInformation.typeName;
+    const auto &fieldDecls = typeInformation.fieldDecls;
 
     buffer.append('\n');
 
-    const auto typeName = decl->name.lexeme.toString();
-
-    List<const Decl *> fieldDecls;
-    for (auto i = 0; i < type.members.length; ++i) {
-        const auto member = type.members[i];
-        if (DeclKind::Field != member->kind) continue;
-        fieldDecls.append(member);
-    }
-
     buffer.append("template<>\n");
-    buffer.append("struct CopyGeneric<").append(typeName).append(">\n");
+    buffer.append("struct ");
+    buffer.append(generator.specializationName);
+    buffer.append("<");
+    buffer.append(typeInformation.typeName);
+    buffer.append(">\n");
     buffer.append("{\n");
 
     {
         const auto emitReprPrefix = [&]() {
-            buffer.append(typeName).append("_Repr");
+            buffer.append(typeName);
+            buffer.append("_Repr");
         };
         const auto emitReprPrefixWithSubscript = [&](u64 subscript) {
             emitReprPrefix();
@@ -96,13 +126,13 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
         }
 
         for (auto i = fieldDecls.length - 1; i >= 0; --i) {
-            const auto field = fieldDecls[i];
+            const auto &field = fieldDecls[i];
 
             makeIndentation(buffer, 1);
             buffer.append("using ");
             emitReprPrefixWithSubscript(i);
             buffer.append(" = HList<");
-            Ast::showStructure(buffer, field->field.type);
+            cpp::Ast::showStructure(buffer, field.type);
                 // @TODO: Show structure shows the structure of the type,
                 //        but here we require the cpp-expression.
             buffer.append(", ");
@@ -124,7 +154,10 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
         buffer.append('\n');
 
         makeIndentation(buffer, 1);
-        buffer.append("using Type = ").append(typeName).append(";\n");
+        buffer.append("using Type = ");
+        buffer.append(typeName);
+        buffer.append(";\n");
+        
         makeIndentation(buffer, 1);
         buffer.append("using Repr = "); emitReprPrefix(); buffer.append(";\n");
 
@@ -147,7 +180,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
                 }
 
                 for (auto i = fieldDecls.length - 1; i >= 0; --i) {
-                    const auto field = fieldDecls[i];
+                    const auto &field = fieldDecls[i];
 
                     makeIndentation(buffer, 2);
                     buffer.append("const ");
@@ -155,9 +188,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
                     buffer.append(' ');
                     emitValueNameWithSubscript(i);
                     buffer.append('(');
-                    const auto fieldName = field->name.lexeme.toString();
                     buffer.append("value.");
-                    buffer.append(fieldName);
+                    buffer.append(field.name);
                     buffer.append(", ");
                     emitValueNameWithSubscript(i + 1);
                     buffer.append(");\n");
@@ -225,12 +257,10 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl, co
                 buffer.append("Type result;\n");
 
                 for (auto i = 0; i < fieldDecls.length; ++i) {
-                    const auto field = fieldDecls[i];
-                    const auto fieldName = field->name.lexeme.toString();
-
+                    const auto &field = fieldDecls[i];
                     makeIndentation(buffer, 2);
                     buffer.append("result.");
-                    buffer.append(fieldName);
+                    buffer.append(field.name);
                     buffer.append(" = ");
                     emitValueNameWithSubscript(i);
                     buffer.append(".head;\n");
