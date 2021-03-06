@@ -49,8 +49,10 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 {
     using namespace cpp;
 
+    const auto typeInformation = preprocess(decl);
+
     Generator copyGenericGenerator {
-        .typeInformation = preprocess(decl),
+        .typeInformation = &typeInformation,
         .specializationName = "CopyGeneric",
 
         .generation = Generation(u8(Generation::To) | u8(Generation::From)),
@@ -106,7 +108,7 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
     if (not generateFrom and not generateTo)
         return;
 
-    const auto &typeInformation = generator.typeInformation;
+    const auto &typeInformation = *generator.typeInformation;
     const auto &typeName = typeInformation.typeName;
     const auto &fieldDecls = typeInformation.fieldDecls;
 

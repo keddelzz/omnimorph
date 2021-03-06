@@ -44,7 +44,7 @@ private:
     };
     struct Generator
     {
-        TypeInformation typeInformation;
+        const TypeInformation *typeInformation { nullptr };
         String specializationName;
 
         Generation generation { Generation::None };
