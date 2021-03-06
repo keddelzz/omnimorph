@@ -2,16 +2,6 @@
 
 #include "gg/Omnimorph.h"
 
-/*
-int main()
-{
-    const String inputFile("../../example-old/Fid.h");
-    const String outputFile("../../example-old/Fid.h.generic");
-    gg::Omnimorph::generateGeneric(inputFile, outputFile);
-    return EXIT_SUCCESS;
-}
-*/
-
 int main(int argc, char *args[])
 {
     constexpr auto expectedArgumentCount = 1 + 2;
