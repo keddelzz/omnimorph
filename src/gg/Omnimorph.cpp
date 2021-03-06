@@ -73,8 +73,88 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
             buffer.append(field.name);
         }
     };
-
     Omnimorph::generate(copyGenericGenerator, buffer);
+
+    {
+        Generator referenceGenericGenerator {
+            .typeInformation = &typeInformation,
+            .specializationName = "ReferenceGeneric",
+
+            .generation = Generation::To,
+            .constParameter = Generation::None,
+
+            .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
+                showType(buffer, field.type);
+                buffer.append(" &");
+            },
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+                buffer.append(instanceName);
+                buffer.append('.');
+                buffer.append(field.name);
+            }
+        };
+        Omnimorph::generate(referenceGenericGenerator, buffer);
+
+        Generator constReferenceGenericGenerator {
+            .typeInformation = &typeInformation,
+            .specializationName = "ConstReferenceGeneric",
+
+            .generation = Generation::To,
+            .constParameter = Generation::To,
+            .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
+                buffer.append("const ");
+                showType(buffer, field.type);
+                buffer.append(" &");
+            },
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+                buffer.append(instanceName);
+                buffer.append('.');
+                buffer.append(field.name);
+            }
+        };
+        Omnimorph::generate(constReferenceGenericGenerator, buffer);
+    }
+
+    {
+        Generator pointerGenericGenerator {
+            .typeInformation = &typeInformation,
+            .specializationName = "PointerGeneric",
+
+            .generation = Generation::To,
+            .constParameter = Generation::None,
+            .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
+                showType(buffer, field.type);
+                buffer.append(" *");
+            },
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+                buffer.append('&');
+                buffer.append(instanceName);
+                buffer.append('.');
+                buffer.append(field.name);
+            }
+        };
+        Omnimorph::generate(pointerGenericGenerator, buffer);
+
+        Generator constPointerGenericGenerator {
+            .typeInformation = &typeInformation,
+            .specializationName = "ConstPointerGeneric",
+
+            .generation = Generation::To,
+            .constParameter = Generation::To,
+            .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
+                buffer.append("const ");
+                showType(buffer, field.type);
+                buffer.append(" *");
+            },
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+                buffer.append('&');
+                buffer.append(instanceName);
+                buffer.append('.');
+                buffer.append(field.name);
+            }
+        };
+        Omnimorph::generate(constPointerGenericGenerator, buffer);
+    }
 }
 
 Omnimorph::TypeInformation Omnimorph::preprocess(const cpp::Decl *decl)
