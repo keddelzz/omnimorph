@@ -8,10 +8,6 @@
 #include "Nested.h"
 #include "Nested.h.generic"
 
-// @TODO: Better project setup so that the paths can get generated correctly
-//        (currently the generated include paths are incorrect, because they
-//        depend on the project's structure)
-//        Is ExternalProject the solution?
 // @TODO: Can we somehow make CMake include the generic representation, if the
 //        type is included?
 
