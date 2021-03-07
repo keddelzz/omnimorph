@@ -33,15 +33,22 @@ private:
 
     static void makeIndentation(StringBuilder &buffer, int level);
 
-    using EmitMemberType = void (*) (StringBuilder &buffer, const FieldInformation &field); // <type-name>
-    using EmitMemberAccess = void (*) (StringBuilder &buffer, const String &instanceName, const FieldInformation &field); // <instance>.<name>
-
     enum class Generation : u8
     {
         None = 0x0,
         To   = 0x1,
         From = 0x2
     };
+
+    enum class AccessMode : u8
+    {
+        Read,
+        Write
+    };
+
+    using EmitMemberType = void (*) (StringBuilder &buffer, const FieldInformation &field); // <type-name>
+    using EmitMemberAccess = void (*) (StringBuilder &buffer, const String &instanceName, const FieldInformation &field, AccessMode mode); // <instance>.<name>
+
     struct Generator
     {
         const TypeInformation *typeInformation { nullptr };

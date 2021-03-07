@@ -68,7 +68,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
         .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
             showType(buffer, field.type);
         },
-        .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+        .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field, AccessMode mode) {
+            (void) mode;
             buffer.append(instanceName);
             buffer.append('.');
             buffer.append(field.name);
@@ -88,7 +89,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 showType(buffer, field.type);
                 buffer.append(" &");
             },
-            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field, AccessMode mode) {
+                (void) mode;
                 buffer.append(instanceName);
                 buffer.append('.');
                 buffer.append(field.name);
@@ -107,7 +109,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 showType(buffer, field.type);
                 buffer.append(" &");
             },
-            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field, AccessMode mode) {
+                (void) mode;
                 buffer.append(instanceName);
                 buffer.append('.');
                 buffer.append(field.name);
@@ -127,7 +130,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 showType(buffer, field.type);
                 buffer.append(" *");
             },
-            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field, AccessMode mode) {
+                (void) mode;
                 buffer.append('&');
                 buffer.append(instanceName);
                 buffer.append('.');
@@ -147,7 +151,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 showType(buffer, field.type);
                 buffer.append(" *");
             },
-            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field) {
+            .emitMemberAccess = [](StringBuilder &buffer, const String &instanceName, const FieldInformation &field, AccessMode mode) {
+                (void) mode;
                 buffer.append('&');
                 buffer.append(instanceName);
                 buffer.append('.');
@@ -305,7 +310,7 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                     buffer.append(' ');
                     emitValueNameWithSubscript(i);
                     buffer.append('(');
-                    generator.emitMemberAccess(buffer, "value", field);
+                    generator.emitMemberAccess(buffer, "value", field, AccessMode::Read);
                     buffer.append(", ");
                     emitValueNameWithSubscript(i + 1);
                     buffer.append(");\n");
@@ -388,7 +393,7 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                 for (auto i = 0; i < fieldDecls.length; ++i) {
                     const auto &field = fieldDecls[i];
                     makeIndentation(buffer, 2);
-                    generator.emitMemberAccess(buffer, "result", field);
+                    generator.emitMemberAccess(buffer, "result", field, AccessMode::Write);
                     buffer.append(" = ");
                     emitValueNameWithSubscript(i);
                     buffer.append(".head;\n");
