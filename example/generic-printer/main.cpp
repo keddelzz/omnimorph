@@ -18,19 +18,22 @@ void gprint(std::ostream &stream, double value)
 void gprint(std::ostream &stream, bool value)
 { stream << (value ? "true" : "false"); }
 
-void gprint_elements(std::ostream &, bool, HNil) {}
+void gprint_elements(std::ostream &, bool, const HNil &) {}
 template<typename H, typename T>
-void gprint_elements(std::ostream &stream, bool first, const HList<H, T> &list)
+void gprint_elements(std::ostream &stream, bool first, const HList<Named<const H &>, T> &list)
 {
     if (not first) stream << ", ";
-    gprint(stream, list.head);
+    stream << list.head.name << " = ";
+    gprint(stream, list.head.value);
     gprint_elements(stream, false, list.tail);
 }
 
 template<typename T>
 void gprint(std::ostream &stream, const T &value)
 {
-    const auto repr = CopyGeneric<T>::to(value);
+    using Generic = ConstReferenceLabelledGeneric<T>;
+    const auto repr = Generic::to(value);
+    stream << Generic::name;
     stream << '(';
     gprint_elements(stream, true, repr);
     stream << ')';
