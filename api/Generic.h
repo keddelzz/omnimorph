@@ -1,6 +1,6 @@
 #pragma once
 
-#include "HList.h"
+#include "Representation.h"
 
 #define generic(T)                         \
     friend class CopyGeneric<T>;           \
