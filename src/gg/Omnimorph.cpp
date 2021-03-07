@@ -65,6 +65,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
         .generation = Generation(u8(Generation::To) | u8(Generation::From)),
         .constParameter = Generation(u8(Generation::To) | u8(Generation::From)),
+        .labelled = false,
+
         .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
             showType(buffer, field.type);
         },
@@ -84,6 +86,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::None,
+            .labelled = false,
 
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 showType(buffer, field.type);
@@ -104,6 +107,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::To,
+            .labelled = false,
+
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 buffer.append("const ");
                 showType(buffer, field.type);
@@ -126,6 +131,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::None,
+            .labelled = false,
+
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 showType(buffer, field.type);
                 buffer.append(" *");
@@ -146,6 +153,8 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::To,
+            .labelled = false,
+
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 buffer.append("const ");
                 showType(buffer, field.type);
@@ -247,7 +256,13 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
             buffer.append("using ");
             emitReprPrefixWithSubscript(i);
             buffer.append(" = HList<");
+            if (generator.labelled) {
+                buffer.append("Named<");
+            }
             generator.emitMemberType(buffer, field);
+            if (generator.labelled) {
+                buffer.append(">");
+            }
             buffer.append(", ");
             emitReprPrefixWithSubscript(i + 1);
             buffer.append(">;\n");
@@ -273,6 +288,13 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
         
         makeIndentation(buffer, 1);
         buffer.append("using Repr = "); emitReprPrefix(); buffer.append(";\n");
+
+        if (generator.labelled) {
+            makeIndentation(buffer, 1);
+            buffer.append("constexpr static auto name = \"");
+            buffer.append(typeName);
+            buffer.append("\";\n");
+        }
 
         buffer.append('\n');
 
@@ -310,7 +332,18 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                     buffer.append(' ');
                     emitValueNameWithSubscript(i);
                     buffer.append('(');
+
+                    if (generator.labelled) {
+                        buffer.append("Named<");
+                        generator.emitMemberType(buffer, field);
+                        buffer.append(">(\"");
+                        buffer.append(field.name);
+                        buffer.append("\", ");
+                    }
                     generator.emitMemberAccess(buffer, "value", field, AccessMode::Read);
+                    if (generator.labelled) {
+                        buffer.append(')');
+                    }
                     buffer.append(", ");
                     emitValueNameWithSubscript(i + 1);
                     buffer.append(");\n");
@@ -396,7 +429,11 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                     generator.emitMemberAccess(buffer, "result", field, AccessMode::Write);
                     buffer.append(" = ");
                     emitValueNameWithSubscript(i);
-                    buffer.append(".head;\n");
+                    buffer.append(".head");
+                    if (generator.labelled) {
+                        buffer.append(".value");
+                    }
+                    buffer.append(";\n");
                 }
 
                 makeIndentation(buffer, 2);

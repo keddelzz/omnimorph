@@ -56,6 +56,7 @@ private:
 
         Generation generation { Generation::None };
         Generation constParameter { Generation::None };
+        bool labelled { false };
         EmitMemberType emitMemberType { nullptr };
         EmitMemberAccess emitMemberAccess { nullptr };
     };
