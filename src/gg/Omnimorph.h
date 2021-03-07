@@ -52,7 +52,7 @@ private:
     struct Generator
     {
         const TypeInformation *typeInformation { nullptr };
-        String specializationName;
+        String specializationNamePrefix;
 
         Generation generation { Generation::None };
         Generation constParameter { Generation::None };

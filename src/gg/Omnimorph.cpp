@@ -61,7 +61,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
     Generator copyGenericGenerator {
         .typeInformation = &typeInformation,
-        .specializationName = "CopyGeneric",
+        .specializationNamePrefix = "Copy",
 
         .generation = Generation(u8(Generation::To) | u8(Generation::From)),
         .constParameter = Generation(u8(Generation::To) | u8(Generation::From)),
@@ -82,7 +82,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
     {
         Generator referenceGenericGenerator {
             .typeInformation = &typeInformation,
-            .specializationName = "ReferenceGeneric",
+            .specializationNamePrefix = "Reference",
 
             .generation = Generation::To,
             .constParameter = Generation::None,
@@ -103,7 +103,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
         Generator constReferenceGenericGenerator {
             .typeInformation = &typeInformation,
-            .specializationName = "ConstReferenceGeneric",
+            .specializationNamePrefix = "ConstReference",
 
             .generation = Generation::To,
             .constParameter = Generation::To,
@@ -127,7 +127,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
     {
         Generator pointerGenericGenerator {
             .typeInformation = &typeInformation,
-            .specializationName = "PointerGeneric",
+            .specializationNamePrefix = "Pointer",
 
             .generation = Generation::To,
             .constParameter = Generation::None,
@@ -149,7 +149,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
         Generator constPointerGenericGenerator {
             .typeInformation = &typeInformation,
-            .specializationName = "ConstPointerGeneric",
+            .specializationNamePrefix = "ConstPointer",
 
             .generation = Generation::To,
             .constParameter = Generation::To,
@@ -220,7 +220,13 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
 
     buffer.append("template<>\n");
     buffer.append("struct ");
-    buffer.append(generator.specializationName);
+
+    buffer.append(generator.specializationNamePrefix);
+    if (generator.labelled) {
+        buffer.append("Labelled");
+    }
+    buffer.append("Generic");
+
     buffer.append("<");
     buffer.append(typeInformation.typeName);
     buffer.append(">\n");
