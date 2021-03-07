@@ -65,7 +65,6 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
         .generation = Generation(u8(Generation::To) | u8(Generation::From)),
         .constParameter = Generation(u8(Generation::To) | u8(Generation::From)),
-        .labelled = false,
 
         .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
             showType(buffer, field.type);
@@ -77,7 +76,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
             buffer.append(field.name);
         }
     };
-    Omnimorph::generate(copyGenericGenerator, buffer);
+    Omnimorph::generateUnlabelledAndLabelled(copyGenericGenerator, buffer);
 
     {
         Generator referenceGenericGenerator {
@@ -86,7 +85,6 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::None,
-            .labelled = false,
 
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 showType(buffer, field.type);
@@ -99,7 +97,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 buffer.append(field.name);
             }
         };
-        Omnimorph::generate(referenceGenericGenerator, buffer);
+        Omnimorph::generateUnlabelledAndLabelled(referenceGenericGenerator, buffer);
 
         Generator constReferenceGenericGenerator {
             .typeInformation = &typeInformation,
@@ -107,7 +105,6 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::To,
-            .labelled = false,
 
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 buffer.append("const ");
@@ -121,7 +118,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 buffer.append(field.name);
             }
         };
-        Omnimorph::generate(constReferenceGenericGenerator, buffer);
+        Omnimorph::generateUnlabelledAndLabelled(constReferenceGenericGenerator, buffer);
     }
 
     {
@@ -131,7 +128,6 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::None,
-            .labelled = false,
 
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 showType(buffer, field.type);
@@ -145,7 +141,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 buffer.append(field.name);
             }
         };
-        Omnimorph::generate(pointerGenericGenerator, buffer);
+        Omnimorph::generateUnlabelledAndLabelled(pointerGenericGenerator, buffer);
 
         Generator constPointerGenericGenerator {
             .typeInformation = &typeInformation,
@@ -153,7 +149,6 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
 
             .generation = Generation::To,
             .constParameter = Generation::To,
-            .labelled = false,
 
             .emitMemberType = [](StringBuilder &buffer, const FieldInformation &field) {
                 buffer.append("const ");
@@ -168,7 +163,7 @@ void Omnimorph::generateGeneric(StringBuilder &buffer, const cpp::Decl *decl)
                 buffer.append(field.name);
             }
         };
-        Omnimorph::generate(constPointerGenericGenerator, buffer);
+        Omnimorph::generateUnlabelledAndLabelled(constPointerGenericGenerator, buffer);
     }
 }
 
@@ -199,6 +194,15 @@ void Omnimorph::makeIndentation(StringBuilder &buffer, int level)
         buffer.append(singleIndentation);
         --level;
     }
+}
+
+void Omnimorph::generateUnlabelledAndLabelled(Generator &generator, StringBuilder &buffer)
+{
+    generator.labelled = false;
+    Omnimorph::generate(generator, buffer);
+
+    generator.labelled = true;
+    Omnimorph::generate(generator, buffer);
 }
 
 void Omnimorph::generate(Generator &generator, StringBuilder &buffer)

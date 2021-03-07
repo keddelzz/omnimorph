@@ -60,6 +60,8 @@ private:
         EmitMemberType emitMemberType { nullptr };
         EmitMemberAccess emitMemberAccess { nullptr };
     };
+    // @TODO: Make buffer first argument
+    static void generateUnlabelledAndLabelled(Generator &generator, StringBuilder &buffer);
     static void generate(Generator &generator, StringBuilder &buffer);
 
 };
