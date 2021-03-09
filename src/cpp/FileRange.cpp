@@ -11,6 +11,9 @@ FileRange::FileRange(
     , end(end)
 {}
 
+FileRange::~FileRange()
+{}
+
 bool FileRange::isNullRange() const
 {
     return fileName.empty() and

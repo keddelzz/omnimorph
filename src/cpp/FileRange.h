@@ -14,6 +14,7 @@ struct FileRange
         const FilePosition &start,
         const FilePosition &end
     );
+    ~FileRange();
 
     String       fileName;
     FilePosition start;

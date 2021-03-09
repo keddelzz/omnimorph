@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstring>
 
 #include "types.h"
 #include "Utils.h"
@@ -16,15 +17,23 @@ struct List
         ensureCapacity(initialCapacity);
     }
 
-    ~List()
+    List(const List<T> &other) { copy(other); }
+    List(List<T> &&other) noexcept { consume(std::move(other)); }
+    List<T> &operator=(const List<T> &other)
     {
-        if (data != nullptr) {
-            free(data);
-            data = nullptr;
-            length = 0;
-            capacity = 0;
+        if (this != &other) {
+            clear();
+            copy(other);
         }
+        return *this;
     }
+    List<T> &operator=(List<T> &&other) noexcept
+    {
+        consume(std::move(other));
+        return *this;
+    }
+
+    ~List() { clear(); }
 
     constexpr bool empty() const { return length == 0; }
 
@@ -45,14 +54,23 @@ struct List
         data[length] = value;
         ++length;
     }
-    void appendAll(const List<T> &other)
+    void append(T &&value)
     {
-        ensureCapacity(length + other.length);
-        memcpy(&data[length], other.data, other.length);
-        length += other.length;
+        ensureCapacity(length + 1);
+        data[length] = std::move(value);
+        ++length;
     }
 
-    void clear() { length = 0; }
+    void clear()
+    {
+        if (data != nullptr) {
+            free(data);
+        }
+
+        data = nullptr;
+        length = 0;
+        capacity = 0;
+    }
 
     u64 length { 0 };
     u64 capacity { 0 };
@@ -72,7 +90,26 @@ private:
                 newData = realloc(data, sizeof(T) * newCapacity);
             }
             data = static_cast<T *>(newData);
+            memset(data + capacity, 0, sizeof(T) * (newCapacity - capacity));
             capacity = newCapacity;
         }
     }
+
+    void copy(const List<T> &other)
+    {
+        ensureCapacity(other.capacity);
+
+        for (u64 i = 0; i < other.length; ++i) {
+            data[length + i] = other[i];
+        }
+        length = other.length;
+    }
+
+    void consume(List<T> &&other)
+    {
+        length = other.length;
+        capacity = other.capacity;
+        data = std::exchange(other.data, nullptr);
+    }
+
 };

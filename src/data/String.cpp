@@ -19,20 +19,29 @@ String::String(const char *string, s64 length)
     String::initialize(*this, string, length, false);
 }
 
-String::~String()
-{
-    if (owned) {
-        // @malloc @free
-        free(data);
-        owned = false;
-        length = 0;
-        data = nullptr;
-    }
-}
-
 String::String(const String &other)
 {
-    String::initialize(*this, reinterpret_cast<const char *>(other.data), other.length, other.owned);
+    copy(other);
+}
+
+String::String(String &&other) noexcept
+{
+    consume(std::move(other));
+}
+
+String &String::operator=(const String &other) noexcept
+{
+    if (this != &other) {
+        clear();
+        copy(other);
+    }
+    return *this;
+}
+
+String &String::operator=(String &&other) noexcept
+{
+    consume(std::move(other));
+    return *this;
 }
 
 void String::initialize(String &string, const char *str, s64 length, bool own)
@@ -72,6 +81,33 @@ bool String::operator==(const String &other) const
     }
 
     return true;
+}
+
+void String::copy(const String &other)
+{
+    String::initialize(*this, reinterpret_cast<const char *>(other.data), other.length, other.owned);
+}
+
+void String::consume(String &&other)
+{
+    owned = other.owned;
+    length = other.length;
+    data = std::exchange(other.data, nullptr);
+
+    other.owned = false;
+    other.length = 0;
+}
+
+void String::clear()
+{
+    if (owned and data != nullptr) {
+        // @malloc @free
+        free(data);
+    }
+
+    owned = false;
+    length = 0;
+    data = nullptr;
 }
 
 std::ostream &operator<<(std::ostream &stream, const String &string)
