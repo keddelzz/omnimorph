@@ -17,6 +17,27 @@
 #include "../common/Nested.h"
 #include "../common/Nested.h.generic"
 
+std::ostream &operator<<(std::ostream &stream, const Vec2i &v)
+{ return stream << "Vec2i(" << v.x << ", " << v.y << ")"; }
+std::ostream &operator<<(std::ostream &stream, const Fid &f)
+{ return stream << "Fid(" << f.f << ", " << f.i << ", " << f.d << ")"; }
+std::ostream &operator<<(std::ostream &stream, const Nested &f)
+{ return stream << "Nested(" << f.flag << ", " << f.fid << ", " << f.vec << ")"; }
+template<typename T>
+std::ostream &operator<<(std::ostream &stream, const List<T> &l)
+{
+    stream << "List(";
+    for (uint64_t i = 0; i < l.length; ++i) {
+        stream << l[i];
+        if (i < l.length - 1) {
+            stream << ", ";
+        }
+    }
+    return stream << ")";
+}
+std::ostream &operator<<(std::ostream &stream, const Individual &i)
+{ return stream << "Individual(" << i.name << ", " << i.age << ", " << i.pets << ")"; }
+
 json::Value jsonTestIndividual()
 {
     json::Object root;
