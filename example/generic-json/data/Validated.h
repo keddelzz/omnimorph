@@ -16,13 +16,12 @@ public:
         }
     }
 
-    virtual ~Validated()
+    virtual ~Validated() { clear(); }
+
+    Validated<Error, Value> &operator=(Validated<Error, Value> &&other) noexcept
     {
-        if (hasValue()) {
-            m_value.~Value();
-        } else {
-            m_error.~Error();
-        }
+        consume(std::move(other));
+        return *this;
     }
 
     static Validated<Error, Value> failure(Error &&error)
@@ -45,6 +44,25 @@ public:
     constexpr Error &&error() { assert(hasError()); return std::move(m_error); }
 
 private:
+    void clear()
+    {
+        if (hasValue()) {
+            m_value.~Value();
+        } else {
+            m_error.~Error();
+        }
+    }
+
+    void consume(Validated<Error, Value> &&other) noexcept
+    {
+        m_type = other.m_type;
+        if (other.hasValue()) {
+            m_value = std::move(other.m_value);
+        } else {
+            m_error = std::move(other.m_error);
+        }
+    }
+
     enum class Type
     {
         Failure,
