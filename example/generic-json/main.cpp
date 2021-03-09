@@ -257,7 +257,7 @@ void from_json(const json::Value &json, Val<T> &out)
         StringBuilder message;
         message.append('\'').append(showJson(json)).append("' is of type '")
             .append(actualType).append("' but is required to be of type '")
-            .append("'").append(expectType).append("'!");
+            .append(expectType).append("'!");
         out = Val<T>::failure(message.toString());
         return;
     }
