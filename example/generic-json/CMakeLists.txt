@@ -3,10 +3,11 @@ project(generic-json C CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 set(${PROJECT_NAME}_Types
-    Individual.h
     ../common/Fid.h
     ../common/Vec2i.h
     ../common/Nested.h
+    Individual.h
+    Test.h
 )
 
 foreach(file in ${${PROJECT_NAME}_Types})

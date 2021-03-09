@@ -17,6 +17,8 @@
 #include "../common/Vec2i.h.generic"
 #include "../common/Nested.h"
 #include "../common/Nested.h.generic"
+#include "Test.h"
+#include "Test.h.generic"
 
 std::ostream &operator<<(std::ostream &stream, const Vec2i &v)
 { return stream << "Vec2i(" << v.x << ", " << v.y << ")"; }
@@ -38,6 +40,8 @@ std::ostream &operator<<(std::ostream &stream, const List<T> &l)
 }
 std::ostream &operator<<(std::ostream &stream, const Individual &i)
 { return stream << "Individual(" << i.name << ", " << i.age << ", " << i.pets << ")"; }
+std::ostream &operator<<(std::ostream &stream, const Test &m)
+{ return stream << "Test(" << m.fid << ", " << m.anotherFid << ", " << m.vector << ", " << m.nested << ", " << m.person << ")"; }
 
 json::Value jsonTestIndividual()
 {
@@ -270,14 +274,17 @@ void from_json(const json::Value &json, Val<T> &out)
 int main() {
     std::cout << "Hello, generic-json" << std::endl;
 
-    const auto individual = testIndividual();
-    const auto jsonIndividual = to_json(individual);
-    printJson(jsonIndividual);
+    const auto g = to_json(Test {
+        Fid {1, 2, 3},
+        Fid {2, 3, 4},
+        Vec2i {77, 99},
+        Nested {true, Fid {1, 2, 3}, Vec2i {55, 22} },
+        testIndividual()
+    });
+    printJson(g);
 
-    const auto jsonIndividual2 = jsonTestIndividual();
-
-    auto validated = Val<Individual>::failure("");
-    from_json(jsonIndividual2, validated);
+    auto validated = Val<Test>::failure("");
+    from_json(g, validated);
 
     if (validated.hasValue()) {
         std::cout << "value: " << validated.value();
