@@ -86,5 +86,6 @@ install(FILES
 set(COMMON_EXAMPLE_FLAGS "EXCLUDE_FROM_ALL")
 
 add_subdirectory(example/generic-printer ${COMMON_EXAMPLE_FLAGS})
+add_subdirectory(example/generic-stdprint ${COMMON_EXAMPLE_FLAGS})
 add_subdirectory(example/generic-clear ${COMMON_EXAMPLE_FLAGS})
 add_subdirectory(example/generic-json ${COMMON_EXAMPLE_FLAGS})
