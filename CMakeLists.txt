@@ -5,16 +5,12 @@ set(CMAKE_CXX_STANDARD 20)
 
 include(GNUInstallDirs)
 
-set(${PROJECT_NAME}_API_HEADERS
-    api/HList.h
-    api/Representation.h
-    api/Generic.h
-)
-
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/install)
 
 set(${PROJECT_NAME}_CLI_HEADERS
-    ${${PROJECT_NAME}_API_HEADERS}
+    api/HList.h
+    api/Representation.h
+    api/Generic.h
 
     src/data/types.h
     src/data/IterationDecision.h
@@ -69,10 +65,12 @@ target_compile_features(${PROJECT_NAME}
     PRIVATE cxx_constexpr
 )
 
-install(FILES
-    ${${PROJECT_NAME}_API_HEADERS}
+INSTALL(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/api/
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}
+    FILES_MATCHING PATTERN "*.h*"
 )
+
 set(OMNIMORPH_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
 set(OMNIMORPH_WORKINGDIR ${CMAKE_CURRENT_BINARY_DIR})
 set(OMNIMORPH_EXECUTABLE ${OMNIMORPH_WORKINGDIR}/${PROJECT_NAME}.exe)
