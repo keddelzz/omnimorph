@@ -11,6 +11,10 @@ set(${PROJECT_NAME}_CLI_HEADERS
     api/HList.h
     api/Representation.h
     api/Generic.h
+    api/predicates/DependentVoid.h
+    api/predicates/ExistsMember.h
+    api/predicates/ExistsOperator.h
+    api/predicates/StdStreamable.h
 
     src/data/types.h
     src/data/IterationDecision.h
