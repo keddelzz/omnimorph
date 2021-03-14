@@ -8,6 +8,13 @@
 
 namespace gg {
 
+// @TODO: Think of a way to configure how members are accessed
+//        (direct, getter and setter)
+
+// @TODO: It would be nice if you can configure how a value of your type is
+//        instantiated (default constructor + member assignments, constructor
+//        containing all members, initializer list, struct initializer syntax)
+
 void Omnimorph::generateGeneric(const String &inputFile, const String &outputFile)
 {
     using namespace cpp;
@@ -426,11 +433,6 @@ void Omnimorph::generate(Generator &generator, StringBuilder &buffer)
                 buffer.append('\n');
 
                 makeIndentation(buffer, 2);
-
-                // @TODO: It would be nice if you can configure how a value of your type is
-                //        instantiated (default constructor + member assignments, constructor
-                //        containing all members, initializer list, struct initializer syntax)
-
                 buffer.append("Type result;\n");
 
                 for (auto i = 0; i < fieldDecls.length; ++i) {
